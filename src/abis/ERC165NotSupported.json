@@ -1,0 +1,119 @@
+{
+  "contractName": "ERC165NotSupported",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/src/contracts/ERC721/mocks/ERC165/ERC165NotSupported.sol\":\"ERC165NotSupported\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/src/contracts/ERC721/mocks/ERC165/ERC165NotSupported.sol\":{\"keccak256\":\"0x10590faccb835675869e65f55b97085319c0412d872c6abc2903f65b86c6d950\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d6f523caffac4feeb45dcdf054a1fb56f0d557b53b640a95caf3d7987438a55a\",\"dweb:/ipfs/QmePz11sAJewMK1She9NTvZo6vydj4bb5x6iTRwjPhdKpo\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212200f8daaa7649978d9fea62ffd714e62e701af8e07ec754fa3d826673cf9ffe08664736f6c634300080b0033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212200f8daaa7649978d9fea62ffd714e62e701af8e07ec754fa3d826673cf9ffe08664736f6c634300080b0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "58:30:96:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "58:30:96:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\ncontract ERC165NotSupported {}\n",
+  "sourcePath": "D:\\03.block-chain\\01.miquelTC__nft-marketplace\\test-proj\\nft-marketplace-master\\src\\contracts\\ERC721\\mocks\\ERC165\\ERC165NotSupported.sol",
+  "ast": {
+    "absolutePath": "project:/src/contracts/ERC721/mocks/ERC165/ERC165NotSupported.sol",
+    "exportedSymbols": {
+      "ERC165NotSupported": [
+        12047
+      ]
+    },
+    "id": 12048,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12046,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:96"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ERC165NotSupported",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 12047,
+        "linearizedBaseContracts": [
+          12047
+        ],
+        "name": "ERC165NotSupported",
+        "nameLocation": "67:18:96",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 12048,
+        "src": "58:30:96",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:56:96"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/src/contracts/ERC721/mocks/ERC165/ERC165NotSupported.sol",
+    "exportedSymbols": {
+      "ERC165NotSupported": [
+        12047
+      ]
+    },
+    "id": 12048,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12046,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:96"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ERC165NotSupported",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 12047,
+        "linearizedBaseContracts": [
+          12047
+        ],
+        "name": "ERC165NotSupported",
+        "nameLocation": "67:18:96",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 12048,
+        "src": "58:30:96",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:56:96"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.11+commit.d7f03943.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-02-16T02:59:58.332Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

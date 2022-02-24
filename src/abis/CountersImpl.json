@@ -1,0 +1,1688 @@
+{
+  "contractName": "CountersImpl",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "current",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "increment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "decrement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "reset",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"current\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"decrement\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"increment\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"reset\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/src/contracts/ERC721/mocks/CountersImpl.sol\":\"CountersImpl\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/src/contracts/ERC721/mocks/CountersImpl.sol\":{\"keccak256\":\"0x6666325920449c9459b0a5ea89e1c6e5036580c98129f94f0b662ef30ffc61a5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f0ed1b7cd535b8fdfe0b223243b6f6bd90178f7438c56b450042bf7784691a65\",\"dweb:/ipfs/QmQvqR5xALz5r2UTZmUYLUSpXdz9fVU5DeqWMAFH2SJqc1\"]},\"project:/src/contracts/ERC721/utils/Counters.sol\":{\"keccak256\":\"0xf0018c2440fbe238dd3a8732fa8e17a0f9dce84d31451dc8a32f6d62b349c9f1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://59e1c62884d55b70f3ae5432b44bb3166ad71ae3acd19c57ab6ddc3c87c325ee\",\"dweb:/ipfs/QmezuXg5GK5oeA4F91EZhozBFekhq5TD966bHPH18cCqhu\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610236806100206000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80632baeceb7146100515780639fa6a6e31461005b578063d09de08a14610079578063d826f88f14610083575b600080fd5b61005961008d565b005b610063610099565b6040516100709190610168565b60405180910390f35b6100816100aa565b005b61008b6100b6565b005b61009760006100c2565b565b60006100a5600061011e565b905090565b6100b4600061012c565b565b6100c06000610142565b565b6000816000015490506000811161010e576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610105906101e0565b60405180910390fd5b6001810382600001819055505050565b600081600001549050919050565b6001816000016000828254019250508190555050565b6000816000018190555050565b6000819050919050565b6101628161014f565b82525050565b600060208201905061017d6000830184610159565b92915050565b600082825260208201905092915050565b7f436f756e7465723a2064656372656d656e74206f766572666c6f770000000000600082015250565b60006101ca601b83610183565b91506101d582610194565b602082019050919050565b600060208201905081810360008301526101f9816101bd565b905091905056fea26469706673582212206e7b11a61247db8fd798aafce2de549d7fee3f3b133be1986b495c927822548a64736f6c634300080b0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c80632baeceb7146100515780639fa6a6e31461005b578063d09de08a14610079578063d826f88f14610083575b600080fd5b61005961008d565b005b610063610099565b6040516100709190610168565b60405180910390f35b6100816100aa565b005b61008b6100b6565b005b61009760006100c2565b565b60006100a5600061011e565b905090565b6100b4600061012c565b565b6100c06000610142565b565b6000816000015490506000811161010e576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610105906101e0565b60405180910390fd5b6001810382600001819055505050565b600081600001549050919050565b6001816000016000828254019250508190555050565b6000816000018190555050565b6000819050919050565b6101628161014f565b82525050565b600060208201905061017d6000830184610159565b92915050565b600082825260208201905092915050565b7f436f756e7465723a2064656372656d656e74206f766572666c6f770000000000600082015250565b60006101ca601b83610183565b91506101d582610194565b602082019050919050565b600060208201905081810360008301526101f9816101bd565b905091905056fea26469706673582212206e7b11a61247db8fd798aafce2de549d7fee3f3b133be1986b495c927822548a64736f6c634300080b0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [
+    {
+      "ast": {
+        "nodeType": "YulBlock",
+        "src": "0:1594:264",
+        "statements": [
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "52:32:264",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "62:16:264",
+                  "value": {
+                    "name": "value",
+                    "nodeType": "YulIdentifier",
+                    "src": "73:5:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "cleaned",
+                      "nodeType": "YulIdentifier",
+                      "src": "62:7:264"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "cleanup_t_uint256",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "34:5:264",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "cleaned",
+                "nodeType": "YulTypedName",
+                "src": "44:7:264",
+                "type": ""
+              }
+            ],
+            "src": "7:77:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "155:53:264",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "172:3:264"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "195:5:264"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "cleanup_t_uint256",
+                          "nodeType": "YulIdentifier",
+                          "src": "177:17:264"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "177:24:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "165:6:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "165:37:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "165:37:264"
+                }
+              ]
+            },
+            "name": "abi_encode_t_uint256_to_t_uint256_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "value",
+                "nodeType": "YulTypedName",
+                "src": "143:5:264",
+                "type": ""
+              },
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "150:3:264",
+                "type": ""
+              }
+            ],
+            "src": "90:118:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "312:124:264",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "322:26:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "334:9:264"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "345:2:264",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "330:3:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "330:18:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "322:4:264"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "value0",
+                        "nodeType": "YulIdentifier",
+                        "src": "402:6:264"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "415:9:264"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "426:1:264",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "411:3:264"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "411:17:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_encode_t_uint256_to_t_uint256_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "358:43:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "358:71:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "358:71:264"
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "284:9:264",
+                "type": ""
+              },
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "296:6:264",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "307:4:264",
+                "type": ""
+              }
+            ],
+            "src": "214:222:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "538:73:264",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "555:3:264"
+                      },
+                      {
+                        "name": "length",
+                        "nodeType": "YulIdentifier",
+                        "src": "560:6:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "548:6:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "548:19:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "548:19:264"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "576:29:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "595:3:264"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "600:4:264",
+                        "type": "",
+                        "value": "0x20"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "591:3:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "591:14:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "updated_pos",
+                      "nodeType": "YulIdentifier",
+                      "src": "576:11:264"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "array_storeLengthForEncoding_t_string_memory_ptr_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "510:3:264",
+                "type": ""
+              },
+              {
+                "name": "length",
+                "nodeType": "YulTypedName",
+                "src": "515:6:264",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "updated_pos",
+                "nodeType": "YulTypedName",
+                "src": "526:11:264",
+                "type": ""
+              }
+            ],
+            "src": "442:169:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "723:71:264",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "memPtr",
+                            "nodeType": "YulIdentifier",
+                            "src": "745:6:264"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "753:1:264",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "741:3:264"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "741:14:264"
+                      },
+                      {
+                        "hexValue": "436f756e7465723a2064656372656d656e74206f766572666c6f77",
+                        "kind": "string",
+                        "nodeType": "YulLiteral",
+                        "src": "757:29:264",
+                        "type": "",
+                        "value": "Counter: decrement overflow"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "734:6:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "734:53:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "734:53:264"
+                }
+              ]
+            },
+            "name": "store_literal_in_memory_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "memPtr",
+                "nodeType": "YulTypedName",
+                "src": "715:6:264",
+                "type": ""
+              }
+            ],
+            "src": "617:177:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "946:220:264",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "956:74:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "1022:3:264"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1027:2:264",
+                        "type": "",
+                        "value": "27"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "array_storeLengthForEncoding_t_string_memory_ptr_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "963:58:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "963:67:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "pos",
+                      "nodeType": "YulIdentifier",
+                      "src": "956:3:264"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "1128:3:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "store_literal_in_memory_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f",
+                      "nodeType": "YulIdentifier",
+                      "src": "1039:88:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1039:93:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1039:93:264"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1141:19:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "pos",
+                        "nodeType": "YulIdentifier",
+                        "src": "1152:3:264"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1157:2:264",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "1148:3:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1148:12:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "end",
+                      "nodeType": "YulIdentifier",
+                      "src": "1141:3:264"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_encode_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f_to_t_string_memory_ptr_fromStack",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "pos",
+                "nodeType": "YulTypedName",
+                "src": "934:3:264",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "end",
+                "nodeType": "YulTypedName",
+                "src": "942:3:264",
+                "type": ""
+              }
+            ],
+            "src": "800:366:264"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "1343:248:264",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1353:26:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "1365:9:264"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "1376:2:264",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "1361:3:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1361:18:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "1353:4:264"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "1400:9:264"
+                          },
+                          {
+                            "kind": "number",
+                            "nodeType": "YulLiteral",
+                            "src": "1411:1:264",
+                            "type": "",
+                            "value": "0"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "add",
+                          "nodeType": "YulIdentifier",
+                          "src": "1396:3:264"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1396:17:264"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "name": "tail",
+                            "nodeType": "YulIdentifier",
+                            "src": "1419:4:264"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "1425:9:264"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "1415:3:264"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "1415:20:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "1389:6:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1389:47:264"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "1389:47:264"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "1445:139:264",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "tail",
+                        "nodeType": "YulIdentifier",
+                        "src": "1579:4:264"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "abi_encode_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f_to_t_string_memory_ptr_fromStack",
+                      "nodeType": "YulIdentifier",
+                      "src": "1453:124:264"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "1453:131:264"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "1445:4:264"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f__to_t_string_memory_ptr__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "1323:9:264",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "1338:4:264",
+                "type": ""
+              }
+            ],
+            "src": "1172:419:264"
+          }
+        ]
+      },
+      "contents": "{\n\n    function cleanup_t_uint256(value) -> cleaned {\n        cleaned := value\n    }\n\n    function abi_encode_t_uint256_to_t_uint256_fromStack(value, pos) {\n        mstore(pos, cleanup_t_uint256(value))\n    }\n\n    function abi_encode_tuple_t_uint256__to_t_uint256__fromStack_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_uint256_to_t_uint256_fromStack(value0,  add(headStart, 0))\n\n    }\n\n    function array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, length) -> updated_pos {\n        mstore(pos, length)\n        updated_pos := add(pos, 0x20)\n    }\n\n    function store_literal_in_memory_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f(memPtr) {\n\n        mstore(add(memPtr, 0), \"Counter: decrement overflow\")\n\n    }\n\n    function abi_encode_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f_to_t_string_memory_ptr_fromStack(pos) -> end {\n        pos := array_storeLengthForEncoding_t_string_memory_ptr_fromStack(pos, 27)\n        store_literal_in_memory_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f(pos)\n        end := add(pos, 32)\n    }\n\n    function abi_encode_tuple_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f__to_t_string_memory_ptr__fromStack_reversed(headStart ) -> tail {\n        tail := add(headStart, 32)\n\n        mstore(add(headStart, 0), sub(tail, headStart))\n        tail := abi_encode_t_stringliteral_1dfd0d5389474d871b8e8929aab9d4def041f55f90f625754fb5f9a9ba08af6f_to_t_string_memory_ptr_fromStack( tail)\n\n    }\n\n}\n",
+      "id": 264,
+      "language": "Yul",
+      "name": "#utility.yul"
+    }
+  ],
+  "sourceMap": "91:408:83:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "91:408:83:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;369:65;;;:::i;:::-;;201:91;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;298:65;;;:::i;:::-;;440:57;;;:::i;:::-;;369:65;407:20;:8;:18;:20::i;:::-;369:65::o;201:91::-;241:7;267:18;:8;:16;:18::i;:::-;260:25;;201:91;:::o;298:65::-;336:20;:8;:18;:20::i;:::-;298:65::o;440:57::-;474:16;:8;:14;:16::i;:::-;440:57::o;1074:229:230:-;1137:13;1153:7;:14;;;1137:30;;1193:1;1185:5;:9;1177:49;;;;;;;;;;;;:::i;:::-;;;;;;;;;1285:1;1277:5;:9;1260:7;:14;;:26;;;;1127:176;1074:229;:::o;827:112::-;892:7;918;:14;;;911:21;;827:112;;;:::o;945:123::-;1050:1;1032:7;:14;;;:19;;;;;;;;;;;945:123;:::o;1309:84::-;1385:1;1368:7;:14;;:18;;;;1309:84;:::o;7:77:264:-;44:7;73:5;62:16;;7:77;;;:::o;90:118::-;177:24;195:5;177:24;:::i;:::-;172:3;165:37;90:118;;:::o;214:222::-;307:4;345:2;334:9;330:18;322:26;;358:71;426:1;415:9;411:17;402:6;358:71;:::i;:::-;214:222;;;;:::o;442:169::-;526:11;560:6;555:3;548:19;600:4;595:3;591:14;576:29;;442:169;;;;:::o;617:177::-;757:29;753:1;745:6;741:14;734:53;617:177;:::o;800:366::-;942:3;963:67;1027:2;1022:3;963:67;:::i;:::-;956:74;;1039:93;1128:3;1039:93;:::i;:::-;1157:2;1152:3;1148:12;1141:19;;800:366;;;:::o;1172:419::-;1338:4;1376:2;1365:9;1361:18;1353:26;;1425:9;1419:4;1415:20;1411:1;1400:9;1396:17;1389:47;1453:131;1579:4;1453:131;:::i;:::-;1445:139;;1172:419;;;:::o",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\nimport \"../utils/Counters.sol\";\n\ncontract CountersImpl {\n    using Counters for Counters.Counter;\n\n    Counters.Counter private _counter;\n\n    function current() public view returns (uint256) {\n        return _counter.current();\n    }\n\n    function increment() public {\n        _counter.increment();\n    }\n\n    function decrement() public {\n        _counter.decrement();\n    }\n\n    function reset() public {\n        _counter.reset();\n    }\n}\n",
+  "sourcePath": "D:\\03.block-chain\\01.miquelTC__nft-marketplace\\test-proj\\nft-marketplace-master\\src\\contracts\\ERC721\\mocks\\CountersImpl.sol",
+  "ast": {
+    "absolutePath": "project:/src/contracts/ERC721/mocks/CountersImpl.sol",
+    "exportedSymbols": {
+      "Counters": [
+        30006
+      ],
+      "CountersImpl": [
+        11131
+      ]
+    },
+    "id": 11132,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 11085,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:83"
+      },
+      {
+        "absolutePath": "project:/src/contracts/ERC721/utils/Counters.sol",
+        "file": "../utils/Counters.sol",
+        "id": 11086,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 11132,
+        "sourceUnit": 30007,
+        "src": "58:31:83",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "CountersImpl",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 11131,
+        "linearizedBaseContracts": [
+          11131
+        ],
+        "name": "CountersImpl",
+        "nameLocation": "100:12:83",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 11090,
+            "libraryName": {
+              "id": 11087,
+              "name": "Counters",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 30006,
+              "src": "125:8:83"
+            },
+            "nodeType": "UsingForDirective",
+            "src": "119:36:83",
+            "typeName": {
+              "id": 11089,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 11088,
+                "name": "Counters.Counter",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 29938,
+                "src": "138:16:83"
+              },
+              "referencedDeclaration": 29938,
+              "src": "138:16:83",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Counter_$29938_storage_ptr",
+                "typeString": "struct Counters.Counter"
+              }
+            }
+          },
+          {
+            "constant": false,
+            "id": 11093,
+            "mutability": "mutable",
+            "name": "_counter",
+            "nameLocation": "186:8:83",
+            "nodeType": "VariableDeclaration",
+            "scope": 11131,
+            "src": "161:33:83",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_Counter_$29938_storage",
+              "typeString": "struct Counters.Counter"
+            },
+            "typeName": {
+              "id": 11092,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 11091,
+                "name": "Counters.Counter",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 29938,
+                "src": "161:16:83"
+              },
+              "referencedDeclaration": 29938,
+              "src": "161:16:83",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Counter_$29938_storage_ptr",
+                "typeString": "struct Counters.Counter"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 11102,
+              "nodeType": "Block",
+              "src": "250:42:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11098,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "267:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11099,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "current",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29950,
+                      "src": "267:16:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_Counter_$29938_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer) view returns (uint256)"
+                      }
+                    },
+                    "id": 11100,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "267:18:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 11097,
+                  "id": 11101,
+                  "nodeType": "Return",
+                  "src": "260:25:83"
+                }
+              ]
+            },
+            "functionSelector": "9fa6a6e3",
+            "id": 11103,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "current",
+            "nameLocation": "210:7:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11094,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "217:2:83"
+            },
+            "returnParameters": {
+              "id": 11097,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 11096,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11103,
+                  "src": "241:7:83",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 11095,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "241:7:83",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "240:9:83"
+            },
+            "scope": 11131,
+            "src": "201:91:83",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11111,
+              "nodeType": "Block",
+              "src": "326:37:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11106,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "336:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11108,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "increment",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29964,
+                      "src": "336:18:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11109,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "336:20:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11110,
+                  "nodeType": "ExpressionStatement",
+                  "src": "336:20:83"
+                }
+              ]
+            },
+            "functionSelector": "d09de08a",
+            "id": 11112,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "increment",
+            "nameLocation": "307:9:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11104,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "316:2:83"
+            },
+            "returnParameters": {
+              "id": 11105,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "326:0:83"
+            },
+            "scope": 11131,
+            "src": "298:65:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11120,
+              "nodeType": "Block",
+              "src": "397:37:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11115,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "407:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11117,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "decrement",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29992,
+                      "src": "407:18:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11118,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "407:20:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11119,
+                  "nodeType": "ExpressionStatement",
+                  "src": "407:20:83"
+                }
+              ]
+            },
+            "functionSelector": "2baeceb7",
+            "id": 11121,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "decrement",
+            "nameLocation": "378:9:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11113,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "387:2:83"
+            },
+            "returnParameters": {
+              "id": 11114,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "397:0:83"
+            },
+            "scope": 11131,
+            "src": "369:65:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11129,
+              "nodeType": "Block",
+              "src": "464:33:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11124,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "474:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11126,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "reset",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 30005,
+                      "src": "474:14:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11127,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "474:16:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11128,
+                  "nodeType": "ExpressionStatement",
+                  "src": "474:16:83"
+                }
+              ]
+            },
+            "functionSelector": "d826f88f",
+            "id": 11130,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "reset",
+            "nameLocation": "449:5:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11122,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "454:2:83"
+            },
+            "returnParameters": {
+              "id": 11123,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "464:0:83"
+            },
+            "scope": 11131,
+            "src": "440:57:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 11132,
+        "src": "91:408:83",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:467:83"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/src/contracts/ERC721/mocks/CountersImpl.sol",
+    "exportedSymbols": {
+      "Counters": [
+        30006
+      ],
+      "CountersImpl": [
+        11131
+      ]
+    },
+    "id": 11132,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 11085,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:83"
+      },
+      {
+        "absolutePath": "project:/src/contracts/ERC721/utils/Counters.sol",
+        "file": "../utils/Counters.sol",
+        "id": 11086,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 11132,
+        "sourceUnit": 30007,
+        "src": "58:31:83",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "CountersImpl",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 11131,
+        "linearizedBaseContracts": [
+          11131
+        ],
+        "name": "CountersImpl",
+        "nameLocation": "100:12:83",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 11090,
+            "libraryName": {
+              "id": 11087,
+              "name": "Counters",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 30006,
+              "src": "125:8:83"
+            },
+            "nodeType": "UsingForDirective",
+            "src": "119:36:83",
+            "typeName": {
+              "id": 11089,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 11088,
+                "name": "Counters.Counter",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 29938,
+                "src": "138:16:83"
+              },
+              "referencedDeclaration": 29938,
+              "src": "138:16:83",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Counter_$29938_storage_ptr",
+                "typeString": "struct Counters.Counter"
+              }
+            }
+          },
+          {
+            "constant": false,
+            "id": 11093,
+            "mutability": "mutable",
+            "name": "_counter",
+            "nameLocation": "186:8:83",
+            "nodeType": "VariableDeclaration",
+            "scope": 11131,
+            "src": "161:33:83",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_struct$_Counter_$29938_storage",
+              "typeString": "struct Counters.Counter"
+            },
+            "typeName": {
+              "id": 11092,
+              "nodeType": "UserDefinedTypeName",
+              "pathNode": {
+                "id": 11091,
+                "name": "Counters.Counter",
+                "nodeType": "IdentifierPath",
+                "referencedDeclaration": 29938,
+                "src": "161:16:83"
+              },
+              "referencedDeclaration": 29938,
+              "src": "161:16:83",
+              "typeDescriptions": {
+                "typeIdentifier": "t_struct$_Counter_$29938_storage_ptr",
+                "typeString": "struct Counters.Counter"
+              }
+            },
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 11102,
+              "nodeType": "Block",
+              "src": "250:42:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11098,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "267:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11099,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "current",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29950,
+                      "src": "267:16:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_view$_t_struct$_Counter_$29938_storage_ptr_$returns$_t_uint256_$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer) view returns (uint256)"
+                      }
+                    },
+                    "id": 11100,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "267:18:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 11097,
+                  "id": 11101,
+                  "nodeType": "Return",
+                  "src": "260:25:83"
+                }
+              ]
+            },
+            "functionSelector": "9fa6a6e3",
+            "id": 11103,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "current",
+            "nameLocation": "210:7:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11094,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "217:2:83"
+            },
+            "returnParameters": {
+              "id": 11097,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 11096,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11103,
+                  "src": "241:7:83",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 11095,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "241:7:83",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "240:9:83"
+            },
+            "scope": 11131,
+            "src": "201:91:83",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11111,
+              "nodeType": "Block",
+              "src": "326:37:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11106,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "336:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11108,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "increment",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29964,
+                      "src": "336:18:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11109,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "336:20:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11110,
+                  "nodeType": "ExpressionStatement",
+                  "src": "336:20:83"
+                }
+              ]
+            },
+            "functionSelector": "d09de08a",
+            "id": 11112,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "increment",
+            "nameLocation": "307:9:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11104,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "316:2:83"
+            },
+            "returnParameters": {
+              "id": 11105,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "326:0:83"
+            },
+            "scope": 11131,
+            "src": "298:65:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11120,
+              "nodeType": "Block",
+              "src": "397:37:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11115,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "407:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11117,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "decrement",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 29992,
+                      "src": "407:18:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11118,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "407:20:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11119,
+                  "nodeType": "ExpressionStatement",
+                  "src": "407:20:83"
+                }
+              ]
+            },
+            "functionSelector": "2baeceb7",
+            "id": 11121,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "decrement",
+            "nameLocation": "378:9:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11113,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "387:2:83"
+            },
+            "returnParameters": {
+              "id": 11114,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "397:0:83"
+            },
+            "scope": 11131,
+            "src": "369:65:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 11129,
+              "nodeType": "Block",
+              "src": "464:33:83",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "id": 11124,
+                        "name": "_counter",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 11093,
+                        "src": "474:8:83",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Counter_$29938_storage",
+                          "typeString": "struct Counters.Counter storage ref"
+                        }
+                      },
+                      "id": 11126,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "reset",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 30005,
+                      "src": "474:14:83",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Counter_$29938_storage_ptr_$returns$__$bound_to$_t_struct$_Counter_$29938_storage_ptr_$",
+                        "typeString": "function (struct Counters.Counter storage pointer)"
+                      }
+                    },
+                    "id": 11127,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "474:16:83",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11128,
+                  "nodeType": "ExpressionStatement",
+                  "src": "474:16:83"
+                }
+              ]
+            },
+            "functionSelector": "d826f88f",
+            "id": 11130,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "reset",
+            "nameLocation": "449:5:83",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11122,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "454:2:83"
+            },
+            "returnParameters": {
+              "id": 11123,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "464:0:83"
+            },
+            "scope": 11131,
+            "src": "440:57:83",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 11132,
+        "src": "91:408:83",
+        "usedErrors": []
+      }
+    ],
+    "src": "33:467:83"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.11+commit.d7f03943.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-02-16T02:59:58.209Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
