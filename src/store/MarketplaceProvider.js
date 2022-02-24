@@ -122,7 +122,8 @@ const MarketplaceProvider = props => {
   };
 
   const loadOfferCountHandler = async(contract) => {
-    const offerCount = await contract.methods.offerCount().call();
+    //const offerCount = await contract.methods.offerCount().call();
+    const offerCount = await contract.offerCount();
     dispatchMarketplaceAction({type: 'LOADOFFERCOUNT', offerCount: offerCount});
     return offerCount;
   };
@@ -130,7 +131,8 @@ const MarketplaceProvider = props => {
   const loadOffersHandler = async(contract, offerCount) => {
     let offers = [];
     for(let i = 0; i < offerCount; i++) {
-      const offer = await contract.methods.offers(i + 1).call();
+      //const offer = await contract.methods.offers(i + 1).call();
+      const offer = await contract.offers(i + 1);
       offers.push(offer);
     }
     offers = offers
@@ -153,7 +155,7 @@ const MarketplaceProvider = props => {
   };
 
   const loadUserFundsHandler = async(contract, account) => {
-    const userFunds = await contract.methods.userFunds(account).call();
+    const userFunds = await contract.userFunds(account);
     dispatchMarketplaceAction({type: 'LOADFUNDS', userFunds: userFunds});
     return userFunds;
   };

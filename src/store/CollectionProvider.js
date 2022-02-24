@@ -106,13 +106,13 @@ const CollectionProvider = props => {
   const loadCollectionHandler = async(contract, totalSupply, account) => {
     let collection = [];
 
-    console.log("metamask.account = " + account);
-    console.log("totalSupply : " + totalSupply);
+    // console.log("metamask.account = " + account);
+    // console.log("totalSupply : " + totalSupply);
     for(let i = 0; i < totalSupply; i++) {
       
       const hash = await contract.methods.tokenURIs(i).call();
 
-      console.log("hash : " + hash);
+      // console.log("hash : " + hash);
       // console.log(`https://ipfs.infura.io/ipfs/${hash}?clear`);
       try {
         const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
