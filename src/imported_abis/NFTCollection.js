@@ -32,6 +32,21 @@ const  NFTCOLLECTION_ABI = [
         "type": "function"
     },
     {
+        "constant": false,
+        "inputs": [
+          {
+            "type":"string",
+            "name":"_tokenURI"
+          }
+        ],
+        "name": "safeMint",
+        "outputs": [
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {

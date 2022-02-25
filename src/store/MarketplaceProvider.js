@@ -11,7 +11,6 @@ const defaultMarketplaceState = {
 };
 
 const marketplaceReducer = (state, action) => {
- 
   if(action.type === 'CONTRACT') {    
     return {
       contract: action.contract,
@@ -24,7 +23,6 @@ const marketplaceReducer = (state, action) => {
 
   if(action.type === 'LOADOFFERCOUNT') {    
     return {
-      // loan: state.loan,
       contract: state.contract,
       offerCount: action.offerCount,
       offers: state.offers,
@@ -83,7 +81,6 @@ const marketplaceReducer = (state, action) => {
 
   if(action.type === 'LOADFUNDS') {
     return {
-      // loan: state.loan,
       contract: state.contract,
       offerCount: state.offerCount,
       offers: state.offers,
@@ -94,7 +91,6 @@ const marketplaceReducer = (state, action) => {
 
   if(action.type === 'LOADING') {    
     return {
-      // loan: state.loan,
       contract: state.contract,
       offerCount: state.offerCount,
       offers: state.offers,
@@ -109,21 +105,14 @@ const marketplaceReducer = (state, action) => {
 const MarketplaceProvider = props => {
   const [MarketplaceState, dispatchMarketplaceAction] = useReducer(marketplaceReducer, defaultMarketplaceState);
   
-  const fundLoanHandler = (price) => {
-    console.log(price);
-  };
-
   const loadContractHandler = (web3, NFTMarketplace, deployedNetwork) => {
     const contract = deployedNetwork ? new web3.eth.Contract(NFTMarketplace.abi, deployedNetwork.address): '';
-
-    //console.log("contract");    console.log(contract);
-    dispatchMarketplaceAction({type: 'CONTRACT', contract: contract}); //, loan: loan
+    dispatchMarketplaceAction({type: 'CONTRACT', contract: contract}); 
     return contract;
   };
 
   const loadOfferCountHandler = async(contract) => {
-    //const offerCount = await contract.methods.offerCount().call();
-    const offerCount = await contract.offerCount();
+    const offerCount = await contract.methods.offerCount().call();
     dispatchMarketplaceAction({type: 'LOADOFFERCOUNT', offerCount: offerCount});
     return offerCount;
   };
@@ -131,8 +120,7 @@ const MarketplaceProvider = props => {
   const loadOffersHandler = async(contract, offerCount) => {
     let offers = [];
     for(let i = 0; i < offerCount; i++) {
-      //const offer = await contract.methods.offers(i + 1).call();
-      const offer = await contract.offers(i + 1);
+      const offer = await contract.methods.offers(i + 1).call();
       offers.push(offer);
     }
     offers = offers
@@ -155,7 +143,7 @@ const MarketplaceProvider = props => {
   };
 
   const loadUserFundsHandler = async(contract, account) => {
-    const userFunds = await contract.userFunds(account);
+    const userFunds = await contract.methods.userFunds(account).call();
     dispatchMarketplaceAction({type: 'LOADFUNDS', userFunds: userFunds});
     return userFunds;
   };
@@ -165,13 +153,11 @@ const MarketplaceProvider = props => {
   };
 
   const marketplaceContext = {
-    loan:  MarketplaceState.loan,
     contract: MarketplaceState.contract,
     offerCount: MarketplaceState.offerCount,
     offers: MarketplaceState.offers,
     userFunds: MarketplaceState.userFunds,
     mktIsLoading: MarketplaceState.mktIsLoading,
-    fundLoan: fundLoanHandler,
     loadContract: loadContractHandler,
     loadOfferCount: loadOfferCountHandler,
     loadOffers: loadOffersHandler,

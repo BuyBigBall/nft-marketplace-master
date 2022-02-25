@@ -1,16 +1,13 @@
 import { useReducer } from 'react';
-import { useContext, useRef, createRef } from 'react';
 
 import CollectionContext from './collection-context';
-import web3 from '../connection/web3';
-import Web3Context from '../store/web3-context';
-
 
 const defaultCollectionState = {
   contract: null,
   totalSupply: null,
   collection: [],
-  nftIsLoading: true
+  nftIsLoading: true,
+  account:''
 };
 
 const collectionReducer = (state, action) => {
@@ -19,7 +16,8 @@ const collectionReducer = (state, action) => {
       contract: action.contract,
       totalSupply: state.totalSupply,
       collection: state.collection,
-      nftIsLoading: state.nftIsLoading
+      nftIsLoading: state.nftIsLoading,
+      account: state.account
     };
   } 
   
@@ -28,7 +26,8 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: action.totalSupply,
       collection: state.collection,
-      nftIsLoading: state.nftIsLoading
+      nftIsLoading: state.nftIsLoading,
+      account: state.account
     };
   }
 
@@ -37,7 +36,19 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: action.collection,
-      nftIsLoading: state.nftIsLoading
+      nftIsLoading: state.nftIsLoading,
+      account: state.account
+    };
+  }
+
+  if(action.type === 'ACCOUNTCHANGE') {    
+    //console.log(action);
+    return {
+      contract: state.contract,
+      totalSupply: state.totalSupply,
+      collection: state.collection,
+      nftIsLoading: state.nftIsLoading,
+      account: action.account
     };
   }
 
@@ -55,7 +66,8 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: collection,
-      nftIsLoading: state.nftIsLoading
+      nftIsLoading: state.nftIsLoading,
+      account: state.account
     };
   }
 
@@ -68,7 +80,8 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: collection,
-      nftIsLoading: state.nftIsLoading
+      nftIsLoading: state.nftIsLoading,
+      account: state.account
     };
   }
 
@@ -77,7 +90,8 @@ const collectionReducer = (state, action) => {
       contract: state.contract,
       totalSupply: state.totalSupply,
       collection: state.collection,
-      nftIsLoading: action.loading
+      nftIsLoading: action.loading,
+      account: state.account
     };
   }
   
@@ -85,16 +99,18 @@ const collectionReducer = (state, action) => {
 };
 
 const CollectionProvider = props => {
-
-  const web3Ctx = useContext(Web3Context);
   const [CollectionState, dispatchCollectionAction] = useReducer(collectionReducer, defaultCollectionState);
+  
+  const changeAccountHandler = (account) => {
+    dispatchCollectionAction({type: 'ACCOUNTCHANGE', account: account}); 
+    return account;
+  };
   
   const loadContractHandler = (web3, NFTCollection, deployedNetwork) => {
     const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection.abi, deployedNetwork.address): '';
     dispatchCollectionAction({type: 'CONTRACT', contract: contract}); 
     return contract;
   };
-
   const loadTotalSupplyHandler = async(contract) => {
     const totalSupply = await contract.methods.totalSupply().call();
 
@@ -106,31 +122,39 @@ const CollectionProvider = props => {
   const loadCollectionHandler = async(contract, totalSupply, account) => {
     let collection = [];
 
-    // console.log("metamask.account = " + account);
-    // console.log("totalSupply : " + totalSupply);
+    // console.log(props);    console.log(collectionContext);
+    
+    // console.log("contract.methods = ");    console.log(contract.methods);
+    let iCount = 0;
+    //totalSupply = 1;
     for(let i = 0; i < totalSupply; i++) {
-      
       const hash = await contract.methods.tokenURIs(i).call();
-
-      // console.log("hash : " + hash);
-      // console.log(`https://ipfs.infura.io/ipfs/${hash}?clear`);
       try {
-        const response = await fetch(`https://ipfs.infura.io/ipfs/${hash}?clear`);
+        const owner = await contract.methods.ownerOf(i + 1).call();
+        if(i>=5 )
+        {
+          if(owner!=account)        
+          continue;
+        } 
+
+        var _url = `https://ipfs.infura.io/ipfs/${hash}?clear`;
+        console.log(_url);
+        const response = await fetch(_url);
         if(!response.ok) {
-          throw new Error('Something went wrong');
+          console.log( "erro: " + + _url);
+          throw new Error('Something went wrong in fetching.');
         }
 
+        console.log(contract.methods.ownerOf(i + 1));
         const metadata = await response.json();
-        const owner = await contract.methods.ownerOf(i + 1).call();
-      if(i>=10 )
-      {
-        if(owner!=account)        continue;
-      } 
-      console.log("owner : ");        console.log(owner);
 
+        // if(i>=10 ) break; // for test calling is very slow and didnot end this function.
+
+        console.log("collection.length : ");        console.log(collection.length);
+        iCount++;
         //console.log(metadata.properties);
         collection = [{
-          id: i + 1,
+          id: i + 1,          //id: iCount,
           title: metadata.properties.name.description,
           img: metadata.properties.image.description,
           link: metadata.properties.link ? metadata.properties.link.description : '',
@@ -149,6 +173,8 @@ const CollectionProvider = props => {
         console.log(err);
       }
     }
+
+    dispatchCollectionAction({type: 'LOADSUPPLY', totalSupply: collection.length});
     dispatchCollectionAction({type: 'LOADCOLLECTION', collection: collection});     
   };
 
@@ -198,6 +224,8 @@ const CollectionProvider = props => {
     totalSupply: CollectionState.totalSupply,
     collection: CollectionState.collection,
     nftIsLoading:CollectionState.nftIsLoading,
+    account: CollectionState.account,
+    changeAccount: changeAccountHandler,
     loadContract: loadContractHandler,
     loadTotalSupply: loadTotalSupplyHandler,
     loadCollection: loadCollectionHandler,

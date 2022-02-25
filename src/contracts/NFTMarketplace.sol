@@ -8,7 +8,8 @@ contract NFTMarketplace {
   mapping (uint => _Offer) public offers;
   mapping (address => uint) public userFunds;
   NFTCollection nftCollection;
-  
+
+
   struct _Offer {
     uint offerId;
     uint id;
@@ -30,18 +31,10 @@ contract NFTMarketplace {
   event OfferFilled(uint offerId, uint id, address newOwner);
   event OfferCancelled(uint offerId, uint id, address owner);
   event ClaimFunds(address user, uint amount);
-  event CollateralOffered(uint offerId, address id, address newOwner);
 
   constructor(address _nftCollection) {
     nftCollection = NFTCollection(_nftCollection);
   }
-  
-  // function fundLoan(uint _id, uint totalLoanAmountETH) public {
-  //     nftCollateral = new PersonalLoanNFTCollateral( uint256(totalLoanAmountETH) );
-  //     nftCollateral.fundLoan();
-  //     uint _offerId = _id;
-  //     emit CollateralOffered(_offerId, address(this), msg.sender);
-  // }
   
   function makeOffer(uint _id, uint _price) public {
 
@@ -54,7 +47,6 @@ contract NFTMarketplace {
     offers[offerCount] = _Offer(offerCount, _id, msg.sender, _price, false, false);
     emit Offer(offerCount, _id, msg.sender, _price, false, false);
   }
-
 
   function fillOffer(uint _offerId) public payable {
     _Offer storage _offer = offers[_offerId];

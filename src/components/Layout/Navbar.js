@@ -1,55 +1,16 @@
 import { useContext, useState } from 'react';
-import {
-  ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS  ,
-  ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS
-    } from '../../config';
-import NFTCOLLECTION_ABI from '../../imported_abis/NFTCollection';
-import NFT_MARKETPLACE_CONTRACT from '../../imported_abis/NFTMarketplace';
-    
-
 
 import Web3Context from '../../store/web3-context';
+import MarketplaceContext from '../../store/marketplace-context';
 import web3 from '../../connection/web3';
 import { formatPrice } from '../../helpers/utils';
-import MarketplaceContext from '../../store/marketplace-context';
-
-
-
-import { useWeb3React } from '@web3-react/core';
-import { Contract } from '@ethersproject/contracts';
 
 const Navbar = () => {
-
-  const { active, account, library, activate } = useWeb3React();
   const [fundsLoading, setFundsLoading] = useState(false);
   
   const web3Ctx = useContext(Web3Context);
-  //const marketplaceCtx = useContext(MarketplaceContext);
-
-
-  if(!library)
-  {
-    return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-white p-0">      
-      </nav>
-    );
-  }
-  const marketplaceCtx = new Contract(
-    ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS, 
-    NFT_MARKETPLACE_CONTRACT, 
-    library).connect(library.getSigner(account));
-  const marketplaceCtx_1 = new web3.eth.Contract(
-          NFT_MARKETPLACE_CONTRACT, 
-          ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS);
-
-
-  if(!marketplaceCtx)
-  {
-    return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-white p-0">      
-      </nav>
-    );
-  }
+  const marketplaceCtx = useContext(MarketplaceContext);
+  
   const connectWalletHandler = async() => {
     try {
       // Request account access
@@ -74,7 +35,7 @@ const Navbar = () => {
   };
 
   // Event ClaimFunds subscription 
-  marketplaceCtx_1.events.ClaimFunds()
+  marketplaceCtx.contract.events.ClaimFunds()
   .on('data', (event) => {
     marketplaceCtx.loadUserFunds(marketplaceCtx.contract, web3Ctx.account);
     setFundsLoading(false);
