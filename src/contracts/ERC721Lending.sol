@@ -78,6 +78,9 @@ contract ERC721Lending is Initializable {
     feesContractAddress = contractAddress;
   }
 
+  // one NFT several times lending is available, while prev lending is ended, 
+  //      thus tokenId is needed.
+  // tokenAddress is ERC721 NFT token
   function setLendSettings(address tokenAddress, uint256 tokenId, uint256 durationHours, uint256 initialWorth, uint256 earningGoal) public {
     require(initialWorth > 0, 'Lending: Initial token worth must be above 0');
     require(earningGoal > 0, 'Lending: Earning goal must be above 0');
@@ -87,7 +90,7 @@ contract ERC721Lending is Initializable {
 
     // assuming token transfer is approved
     address fromOwner = msg.sender;
-    address toAddress = address(this);
+    address toAddress = address(this);    // this site address
     IERC721(tokenAddress).transferFrom(fromOwner, toAddress, tokenId);
 
     lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
@@ -97,6 +100,8 @@ contract ERC721Lending is Initializable {
     emit ERC721ForLendUpdated(tokenAddress, tokenId);
   }
 
+  // after a borrower call setLendSettings,a lender aprove that loan and start lending.
+  // parameters are same to the above function
   function startBorrowing(address tokenAddress, uint256 tokenId) public {
     require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Borrowing: Already lent');
     require(lentERC721List[tokenAddress][tokenId].earningGoal > 0, 'Borrowing: Lender did not set earning goal yet');
@@ -112,7 +117,7 @@ contract ERC721Lending is Initializable {
     // check if needs approval as some tokens fail due this
     (bool success,) = tokenAddress.call(abi.encodeWithSignature(
         "approve(address,uint256)",
-        address(this),
+        address(this),            // this site address
         tokenId
       ));
     if (success) {

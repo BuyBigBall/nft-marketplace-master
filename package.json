@@ -8,6 +8,8 @@
     "node": "14.17.3"
   },
   "dependencies": {
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/units": "^5.5.0",
     "@openzeppelin/contracts-ethereum-package": "^3.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.5.1",
     "@openzeppelin/upgrades": "^2.8.0",

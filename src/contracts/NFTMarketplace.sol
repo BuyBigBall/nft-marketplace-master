@@ -38,11 +38,10 @@ contract NFTMarketplace {
   
   function makeOffer(uint _id, uint _price) public {
 
-    // https://docs.openzeppelin.com/contracts/2.x/api/token/erc721
     nftCollection.transferFrom(
             msg.sender,     // from
-            address(this),  // to
-            _id);           // rokenId
+            address(this),  // to         // this site address
+            _id);           // tokenId
     offerCount ++;
     offers[offerCount] = _Offer(offerCount, _id, msg.sender, _price, false, false);
     emit Offer(offerCount, _id, msg.sender, _price, false, false);
@@ -55,7 +54,7 @@ contract NFTMarketplace {
     require(!_offer.fulfilled, 'An offer cannot be fulfilled twice');
     require(!_offer.cancelled, 'A cancelled offer cannot be fulfilled');
     require(msg.value == _offer.price, 'The ETH amount should match with the NFT Price');
-    nftCollection.transferFrom(address(this), msg.sender, _offer.id);
+    nftCollection.transferFrom(address(this), msg.sender, _offer.id);     // this site address
     _offer.fulfilled = true;
     userFunds[_offer.user] += msg.value;
     emit OfferFilled(_offerId, _offer.id, msg.sender);
@@ -67,7 +66,7 @@ contract NFTMarketplace {
     require(_offer.user == msg.sender, 'The offer can only be canceled by the owner');
     require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
     require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
-    nftCollection.transferFrom(address(this), msg.sender, _offer.id);
+    nftCollection.transferFrom(address(this), msg.sender, _offer.id);       // this site address
     _offer.cancelled = true;
     emit OfferCancelled(_offerId, _offer.id, msg.sender);
   }
