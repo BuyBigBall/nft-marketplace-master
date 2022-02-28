@@ -33,14 +33,8 @@ const NFTCollection = () => {
   //console.log("collectionCtx.collection.length = " + collectionCtx.collection.length);
   const CollateralOfferHandler = (event, tokenId, key) => {
     event.preventDefault();
-    // console.log(event);
-    // console.log("tokenId : " + tokenId);
-    // console.log(key);   //this is the index of nft in the collection.
-    // console.log(collectionCtx);
-    // collectionCtx.contract
 
     const tokenAddress = collectionCtx.contract.options.address;  //nft contract address
-    // console.log(priceRefs.current[key].current.attributes.price);
     const nftPrice = priceRefs.current[key].current.attributes.price-0;
 
     if(priceRefs.current[key].current.value>=nftPrice)
@@ -57,37 +51,52 @@ const NFTCollection = () => {
     //       marketplaceCtx.setMktIsLoading(false);
     //     });       
 
-
+      
       const durationHours = 30 * 24;                        //30 days
       const initialWorthNum = priceRefs.current[key].current.value;
       const initialWorth = parseEther(initialWorthNum);
-        //web3.utils.toWei(priceRefs.current[key].current.value, 'ether') 
-          // )
               
       const APR = 30;                                       // annual prefit ratio = 30%
 
-      var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 * durationHours / 24 / 365;
+      var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
       var lst = earningGoalNum.toString().split('.');
       earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
       // console.log( parseEther(earningGoalNum.toString()) ); return; //0.001068493150684931
       const earningGoal = parseEther( earningGoalNum );       // BigNumber for Ethereum
-      // console.log(tokenAddress);
-      // console.log(tokenId);
-      // console.log(durationHours);
-      // console.log(initialWorth);
-      // console.log(earningGoal);
-      lendingContract.methods.setLendSettings(
-                  tokenAddress, tokenId
-                  , durationHours, initialWorth
-                  , earningGoal)
+     
+      console.log(initialWorthNum);   //0.01
+      console.log(earningGoalNum);    //0.02564383561643836
+      console.log(tokenAddress);      //0x4a65C6C4cBEE896D62ab09BD6B762A5054B6275B
+      console.log(tokenId);           //215
+      console.log(durationHours);     //720
+      console.log(initialWorth);      //0x2386f26fc10000
+      console.log(earningGoal);       //0x5b1aeec098a858
+
+      
+      collectionCtx.contract.methods
+          .approve(tokenAddress, tokenId)
           .send({ from: web3Ctx.account })
           .on('transactionHash', (hash) => {
-              console.log(tokenId);
-            })
-          .on('error', (error) => {
-            window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
-            marketplaceCtx.setMktIsLoading(false);
-          });            
+            marketplaceCtx.setMktIsLoading(true);
+          })
+          .on('receipt', (receipt) => {      
+
+            lendingContract.methods.setLendSettings(
+                                        tokenAddress, tokenId
+                                        , durationHours, initialWorth
+                                        , earningGoal)
+                .send({ from: web3Ctx.account })
+                .on('transactionHash', (hash) => {
+                    console.log(tokenId);
+                    console.log(hash);
+                  })
+                .on('error', (error) => {
+                  window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
+                  marketplaceCtx.setMktIsLoading(false);
+                });            
+
+          });
+
     
     // const library = new Web3Provider(provider);
     // const loanCOntract = new Contract(

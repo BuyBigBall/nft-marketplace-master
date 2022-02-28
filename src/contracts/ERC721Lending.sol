@@ -88,9 +88,12 @@ contract ERC721Lending is Initializable {
     require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Lending: Cannot change settings, token already lent');
     require(lentERC721List[tokenAddress][tokenId].lenderClaimedCollateral == false, 'Lending: Collateral already claimed');
 
+
+
     // assuming token transfer is approved
     address fromOwner = msg.sender;
     address toAddress = address(this);    // this site address
+    IERC721(tokenAddress).approve(fromOwner, tokenId);
     IERC721(tokenAddress).transferFrom(fromOwner, toAddress, tokenId);
 
     lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
