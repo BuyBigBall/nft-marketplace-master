@@ -23,6 +23,7 @@ interface Sablier  {
 } 
 
 contract ERC721Lending is Initializable {
+  uint public lentCount = 0;
   address public acceptedPayTokenAddress;
 
   struct ERC721ForLend {
@@ -91,16 +92,17 @@ contract ERC721Lending is Initializable {
 
 
     // assuming token transfer is approved
-    address fromOwner = msg.sender;
-    address toAddress = address(this);    // this site address
-    IERC721(tokenAddress).approve(fromOwner, tokenId);
+    address fromOwner = IERC721(tokenAddress).ownerOf(tokenId);//address fromOwner = msg.sender;
+    address toAddress = address(this);    // this class contract address
+    //IERC721(tokenAddress).approve(fromOwner, tokenId);
     IERC721(tokenAddress).transferFrom(fromOwner, toAddress, tokenId);
 
-    lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
+    lentCount ++;
+    // lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
 
-    lendersWithTokens.push(ERC721TokenEntry(fromOwner, tokenAddress, tokenId));
+    // lendersWithTokens.push(ERC721TokenEntry(fromOwner, tokenAddress, tokenId));
 
-    emit ERC721ForLendUpdated(tokenAddress, tokenId);
+    // emit ERC721ForLendUpdated(tokenAddress, tokenId);
   }
 
   // after a borrower call setLendSettings,a lender aprove that loan and start lending.
@@ -120,7 +122,7 @@ contract ERC721Lending is Initializable {
     // check if needs approval as some tokens fail due this
     (bool success,) = tokenAddress.call(abi.encodeWithSignature(
         "approve(address,uint256)",
-        address(this),            // this site address
+        address(this),            // this class contract address
         tokenId
       ));
     if (success) {

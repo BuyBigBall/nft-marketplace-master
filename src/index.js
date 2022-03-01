@@ -6,8 +6,15 @@ import CollectionProvider from './store/CollectionProvider';
 import MarketplaceProvider from './store/MarketplaceProvider';
 import App from './App';
 
+const getLibrary = provider => {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
+}
+
+
 ReactDOM.render(
-  <Web3Provider>
+  <Web3Provider getLibrary={getLibrary}>
     <CollectionProvider>
       <MarketplaceProvider>
         <App />

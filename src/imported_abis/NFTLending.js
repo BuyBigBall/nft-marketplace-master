@@ -44,12 +44,26 @@ const  NFTLENDING_ABI = [
       "name": "setLendSettings",
       "outputs": [
         {
-         
+          "type":"uint256"
         }
       ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+    ],
+    "name": "getLentCount",
+    "outputs": [
+      {
+        "type":"uint"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
     
   ];

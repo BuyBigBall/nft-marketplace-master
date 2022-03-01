@@ -1,6 +1,15 @@
 import { useReducer } from 'react';
 
 import MarketplaceContext from './marketplace-context';
+import { useWeb3React } from '@web3-react/core';
+
+
+import {
+  ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS  ,
+  ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS ,
+  ERC721_LENDING_CONTACT_ADDRESS
+    } from '../config';
+import { Web3Provider } from '@ethersproject/providers';
 
 const defaultMarketplaceState = {
   contract: null,
@@ -103,15 +112,24 @@ const marketplaceReducer = (state, action) => {
 };
 
 const MarketplaceProvider = props => {
+  const { active, account, library, activate } = useWeb3React();
   const [MarketplaceState, dispatchMarketplaceAction] = useReducer(marketplaceReducer, defaultMarketplaceState);
   
-  const loadContractHandler = (web3, NFTMarketplace, deployedNetwork) => {
-    const contract = deployedNetwork ? new web3.eth.Contract(NFTMarketplace.abi, deployedNetwork.address): '';
+  const loadContractHandler = (web3, NFTMarketplace, account) => {
+    // const contract = deployedNetwork ? new web3.eth.Contract(NFTMarketplace.abi, deployedNetwork.address): '';
+
+    const contract = new web3.eth.Contract(NFTMarketplace.abi
+              , ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS);
+              // .connect(library.getSigner(account))
+              // ;
+    if(library) contract.connect(library.getSigner(account));
     dispatchMarketplaceAction({type: 'CONTRACT', contract: contract}); 
+
     return contract;
   };
 
   const loadOfferCountHandler = async(contract) => {
+    
     const offerCount = await contract.methods.offerCount().call();
     dispatchMarketplaceAction({type: 'LOADOFFERCOUNT', offerCount: offerCount});
     return offerCount;
@@ -135,6 +153,8 @@ const MarketplaceProvider = props => {
   };
 
   const updateOfferHandler = (offerId) => {
+    // console.log("canceled offerId = " + offerId);
+    // alert(offerId);
     dispatchMarketplaceAction({type: 'UPDATEOFFER', offerId: offerId});   
   };
 
@@ -167,8 +187,16 @@ const MarketplaceProvider = props => {
     setMktIsLoading: setMktIsLoadingHandler
   };
   
+  const getLibrary = provider => {
+    const library = new Web3Provider(provider);
+    library.pollingInterval = 12000;
+    return library;
+}
+
   return (
-    <MarketplaceContext.Provider value={marketplaceContext}>
+    <MarketplaceContext.Provider 
+                getLibrary={getLibrary} 
+                value={marketplaceContext}>
       {props.children}
     </MarketplaceContext.Provider>
   );

@@ -15,12 +15,14 @@ const Navbar = () => {
     try {
       // Request account access
       await window.ethereum.request({ method: 'eth_requestAccounts' });
+      console.log("connectWalletHandler successed");
     } catch(error) {
       console.error(error);
     }
 
     // Load accounts
     web3Ctx.loadAccount(web3);
+    console.log(web3Ctx.account);
   };
 
   const claimFundsHandler = () => {

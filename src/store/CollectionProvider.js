@@ -1,6 +1,14 @@
 import { useReducer } from 'react';
 
 import CollectionContext from './collection-context';
+import {
+  ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS  ,
+  ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS ,
+  ERC721_LENDING_CONTACT_ADDRESS
+    } from '../config';
+import { Web3Provider } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
+
 
 const defaultCollectionState = {
   contract: null,
@@ -100,14 +108,22 @@ const collectionReducer = (state, action) => {
 
 const CollectionProvider = props => {
   const [CollectionState, dispatchCollectionAction] = useReducer(collectionReducer, defaultCollectionState);
-  
+  const { active, account, library, activate } = useWeb3React();
+
   const changeAccountHandler = (account) => {
     dispatchCollectionAction({type: 'ACCOUNTCHANGE', account: account}); 
     return account;
   };
   
-  const loadContractHandler = (web3, NFTCollection, deployedNetwork) => {
-    const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection.abi, deployedNetwork.address): '';
+  const loadContractHandler = (web3, NFTCollection, account) => {
+    //const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection
+          //, deployedNetwork.address): '';
+
+          const contract = new web3.eth.Contract(NFTCollection.abi
+                      , ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS);
+                      // .connect(library.getSigner(account))
+                      // ;
+          if(library) contract.connect(library.getSigner(account));  
     dispatchCollectionAction({type: 'CONTRACT', contract: contract}); 
     return contract;
   };
@@ -128,29 +144,47 @@ const CollectionProvider = props => {
     let iCount = 0;
     //totalSupply = 1;
     for(let i = 0; i < totalSupply; i++) {
+      /*
+        // this is metamask call
+        // contract.methods.tokenURIs(i).send({from: account}).then(function(receipt){
+        //   console.log("receipt");       console.log(receipt);
+        //   });
+      // */
+
+      // this is no metamask call
       const hash = await contract.methods.tokenURIs(i).call();
+      // const hash = await contract.methods.tokenURIs(i).call()
+      //       .then(function(receipt){
+      //         console.log("receipt");       console.log(receipt);
+      //         console.log(hash);
+      //         });
+
+      if(!hash) continue;
       try {
-        const owner = await contract.methods.ownerOf(i + 1).call();
+        const owner = await contract.methods.ownerOf(i + 1).call();   //this is current owner
         if(i>=5 )
         {
           if(owner!=account)        
           continue;
         } 
-
+        
+        
         var _url = `https://ipfs.infura.io/ipfs/${hash}?clear`;
-        console.log(_url);
+        // console.log(_url);
         const response = await fetch(_url);
         if(!response.ok) {
-          console.log( "erro: " + + _url);
+          console.log( "error: " + _url);
           throw new Error('Something went wrong in fetching.');
         }
 
-        console.log(contract.methods.ownerOf(i + 1));
+        // console.log(contract.methods.ownerOf(i + 1));
         const metadata = await response.json();
 
-        // if(i>=10 ) break; // for test calling is very slow and didnot end this function.
+        console.log(i + " owner := " + owner);
+        console.log(metadata.properties.name.description + '' );
 
-        console.log("collection.length : ");        console.log(collection.length);
+
+       // console.log("collection.length : ");        console.log(collection.length);
         iCount++;
         //console.log(metadata.properties);
         collection = [{
@@ -234,8 +268,15 @@ const CollectionProvider = props => {
     setNftIsLoading: setNftIsLoadingHandler
   };
   
+  
+  // const getLibrary = provider => {
+  //     const library = new Web3Provider(provider);
+  //     library.pollingInterval = 12000;
+  //     return library;
+  // }
   return (
-    <CollectionContext.Provider value={collectionContext}>
+    <CollectionContext.Provider 
+          value={collectionContext}>
       {props.children}
     </CollectionContext.Provider>
   );

@@ -31,25 +31,30 @@ const NFTCollection = () => {
   }
   
   //console.log("collectionCtx.collection.length = " + collectionCtx.collection.length);
+  const StartBorrowing = (event, tokenId, key) => {
+    console.log("NFT id = "+tokenId);
+    event.preventDefault();
+  }
   const CollateralOfferHandler = (event, tokenId, key) => {
     event.preventDefault();
 
-    const tokenAddress = collectionCtx.contract.options.address;  //nft contract address
+    //const tokenAddress = collectionCtx.contract.options.address;  //nft contract address
+    const tokenAddress = marketplaceCtx.contract.options.address;  //nft contract address
     const nftPrice = priceRefs.current[key].current.attributes.price-0;
 
     if(priceRefs.current[key].current.value>=nftPrice)
     {
       alert('collateral offer requesting amount cannot be over than ' + nftPrice + ', it is nft price');return;
     }
-    // lendingContract.methods.initialize(web3Ctx.account)
-    //     .send({ from: web3Ctx.account })
-    //     .on('transactionHash', (hash) => {
-    //         //marketplaceCtx.setMktIsLoading(true);
-    //       })
-    //     .on('error', (error) => {
-    //       window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
-    //       marketplaceCtx.setMktIsLoading(false);
-    //     });       
+    lendingContract.methods.initialize(web3Ctx.account)
+        .send({ from: web3Ctx.account })
+        .on('transactionHash', (hash) => {
+            // marketplaceCtx.setMktIsLoading(true);
+          })
+        .on('error', (error) => {
+          window.alert('Something went wrong when initializing for Collateral to the blockchain');
+          marketplaceCtx.setMktIsLoading(false);
+        });       
 
       
       const durationHours = 30 * 24;                        //30 days
@@ -61,54 +66,53 @@ const NFTCollection = () => {
       var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
       var lst = earningGoalNum.toString().split('.');
       earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
-      // console.log( parseEther(earningGoalNum.toString()) ); return; //0.001068493150684931
       const earningGoal = parseEther( earningGoalNum );       // BigNumber for Ethereum
      
       console.log(initialWorthNum);   //0.01
       console.log(earningGoalNum);    //0.02564383561643836
-      console.log(tokenAddress);      //0x4a65C6C4cBEE896D62ab09BD6B762A5054B6275B
+      console.log(tokenAddress);      //marketplace=0x0feFB07BCef45D95d198D2C51050b0A4783C2A80, collection=0x4a65C6C4cBEE896D62ab09BD6B762A5054B6275B
       console.log(tokenId);           //215
       console.log(durationHours);     //720
       console.log(initialWorth);      //0x2386f26fc10000
       console.log(earningGoal);       //0x5b1aeec098a858
 
       
-      collectionCtx.contract.methods
-          .approve(tokenAddress, tokenId)
-          .send({ from: web3Ctx.account })
-          .on('transactionHash', (hash) => {
-            marketplaceCtx.setMktIsLoading(true);
-          })
-          .on('receipt', (receipt) => {      
-
+      // marketplaceCtx.contract.methods
+      //     .approve(ERC721_LENDING_CONTACT_ADDRESS, tokenId)
+      //     .send({ from: web3Ctx.account })
+      //     .on('transactionHash', (hash) => {
+      //       marketplaceCtx.setMktIsLoading(true);
+      //       console.log("lendingContract approve is successed");
+      //     })
+      //     .on('receipt', (receipt) => {      
+      //       console.log("lendingContract approve is receipt");
             lendingContract.methods.setLendSettings(
                                         tokenAddress, tokenId
                                         , durationHours, initialWorth
                                         , earningGoal)
                 .send({ from: web3Ctx.account })
                 .on('transactionHash', (hash) => {
-                    console.log(tokenId);
-                    console.log(hash);
+                    console.log("setLendSettings transactionHash : " + tokenId + ' ' + hash);
                   })
+                .on('receipt', (receipt) => {      
+                  console.log("setLendSettings receipt : ");
+                  console.log(receipt);
+                })
                 .on('error', (error) => {
                   window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
                   marketplaceCtx.setMktIsLoading(false);
                 });            
 
-          });
-
-    
-    // const library = new Web3Provider(provider);
-    // const loanCOntract = new Contract(
-    //   ERC721_LENDING_CONTACT_ADDRESS, 
-    //   NFTLENDINGABI, 
-    //   library).connect(library.getSigner(account));
-  
+         // });
   };
 
   const makeOfferHandler = (event, id, key) => {
     event.preventDefault();
-
+    if(priceRefs.current[key].current.value=='')
+    {
+      alert("pelase input offer price");
+      return;
+    }
     const enteredPrice = web3.utils.toWei(priceRefs.current[key].current.value, 'ether');
 
     collectionCtx.contract.methods
@@ -139,9 +143,10 @@ const NFTCollection = () => {
       marketplaceCtx.setMktIsLoading(false);
     });            
   };
-
+  
   const cancelHandler = (event) => {    
     const cancelIndex = parseInt(event.target.value);
+    console.log("cancel offerId = " + marketplaceCtx.offers[cancelIndex].offerId);
     marketplaceCtx.contract.methods.cancelOffer(marketplaceCtx.offers[cancelIndex].offerId).send({ from: web3Ctx.account })
     .on('transactionHash', (hash) => {
       marketplaceCtx.setMktIsLoading(true);
@@ -158,7 +163,7 @@ const NFTCollection = () => {
     <div className="row text-center">
       { 
         // console.log("marketplaceCtx = ") , console.log(marketplaceCtx) , 
-        console.log("collection length = ") , console.log(collectionCtx.collection.length) ,
+        // console.log("collection length = ") , console.log(collectionCtx.collection.length) ,
         collectionCtx.collection.map((NFT, key) => {
         const index = marketplaceCtx.offers ? marketplaceCtx.offers.findIndex(offer => offer.id === NFT.id) : -1;
         const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
@@ -237,7 +242,8 @@ const NFTCollection = () => {
                   
               </div>
                :
-                <p><br/><br/></p>}
+               <p><br /><br /></p>
+                }
           </div>
         );
       })}
