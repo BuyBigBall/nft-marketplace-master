@@ -5,7 +5,6 @@ import {
   ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS ,
   ERC721_LENDING_CONTACT_ADDRESS
     } from '../../../config';
-import NFTLENDINGABI from '../../../imported_abis/NFTLending';
 import web3 from '../../../connection/web3';
 import Web3Context from '../../../store/web3-context';
 import CollectionContext from '../../../store/collection-context';
@@ -14,13 +13,14 @@ import { formatPrice } from '../../../helpers/utils';
 import eth from '../../../img/eth.png';
 import { parseEther } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
+import NFTLENDINGABI from '../../../imported_abis/ERC721Lending';
 
 const NFTCollection = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
   const marketplaceCtx = useContext(MarketplaceContext);
   const lendingContract = new web3.eth.Contract(
-    NFTLENDINGABI, 
+    NFTLENDINGABI.abi, 
     ERC721_LENDING_CONTACT_ADDRESS);
 
   //console.log("collectionCtx.collection.length 1111 = " + collectionCtx.collection.length);
@@ -38,72 +38,71 @@ const NFTCollection = () => {
   const CollateralOfferHandler = (event, tokenId, key) => {
     event.preventDefault();
 
-    //const tokenAddress = collectionCtx.contract.options.address;  //nft contract address
+    const collectionContractAddress = collectionCtx.contract.options.address;  //nft contract address
     const tokenAddress = marketplaceCtx.contract.options.address;  //nft contract address
     const nftPrice = priceRefs.current[key].current.attributes.price-0;
+    //console.log(tokenAddress); return;
+
+    lendingContract.events.ERC721ForLendUpdated()
+          .on('data', (event) => {
+            console.log(event.returnValues.tokenAddress);
+          })
+          .on('error', (error) => {
+            console.log(error);
+          });
 
     if(priceRefs.current[key].current.value>=nftPrice)
     {
       alert('collateral offer requesting amount cannot be over than ' + nftPrice + ', it is nft price');return;
     }
-    lendingContract.methods.initialize(web3Ctx.account)
+    // lendingContract.methods.initialize(web3Ctx.account).call()
+    //     .then( function(retval) {
+    collectionCtx.contract.methods
+        .approve(tokenAddress)
         .send({ from: web3Ctx.account })
+
         .on('transactionHash', (hash) => {
-            // marketplaceCtx.setMktIsLoading(true);
-          })
-        .on('error', (error) => {
-          window.alert('Something went wrong when initializing for Collateral to the blockchain');
-          marketplaceCtx.setMktIsLoading(false);
-        });       
-
-      
-      const durationHours = 30 * 24;                        //30 days
-      const initialWorthNum = priceRefs.current[key].current.value;
-      const initialWorth = parseEther(initialWorthNum);
-              
-      const APR = 30;                                       // annual prefit ratio = 30%
-
-      var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
-      var lst = earningGoalNum.toString().split('.');
-      earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
-      const earningGoal = parseEther( earningGoalNum );       // BigNumber for Ethereum
-     
-      console.log(initialWorthNum);   //0.01
-      console.log(earningGoalNum);    //0.02564383561643836
-      console.log(tokenAddress);      //marketplace=0x0feFB07BCef45D95d198D2C51050b0A4783C2A80, collection=0x4a65C6C4cBEE896D62ab09BD6B762A5054B6275B
-      console.log(tokenId);           //215
-      console.log(durationHours);     //720
-      console.log(initialWorth);      //0x2386f26fc10000
-      console.log(earningGoal);       //0x5b1aeec098a858
-
-      
-      // marketplaceCtx.contract.methods
-      //     .approve(ERC721_LENDING_CONTACT_ADDRESS, tokenId)
-      //     .send({ from: web3Ctx.account })
-      //     .on('transactionHash', (hash) => {
-      //       marketplaceCtx.setMktIsLoading(true);
-      //       console.log("lendingContract approve is successed");
-      //     })
-      //     .on('receipt', (receipt) => {      
-      //       console.log("lendingContract approve is receipt");
-            lendingContract.methods.setLendSettings(
-                                        tokenAddress, tokenId
-                                        , durationHours, initialWorth
-                                        , earningGoal)
-                .send({ from: web3Ctx.account })
-                .on('transactionHash', (hash) => {
-                    console.log("setLendSettings transactionHash : " + tokenId + ' ' + hash);
-                  })
-                .on('receipt', (receipt) => {      
-                  console.log("setLendSettings receipt : ");
-                  console.log(receipt);
+              marketplaceCtx.setMktIsLoading(true);
+        })
+        .on('receipt', (receipt) => {      
+          const durationHours = 30 * 24;                        //30 days
+          const initialWorthNum = priceRefs.current[key].current.value;
+          const initialWorth = parseEther(initialWorthNum);
+                  
+          const APR = 30;                                       // annual prefit ratio = 30%
+    
+          var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
+          var lst = earningGoalNum.toString().split('.');
+          earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
+          const earningGoal = parseEther( earningGoalNum );       // BigNumber for Ethereum
+          // console.log(initialWorthNum);   //0.01
+          // console.log(earningGoalNum);    //0.02564383561643836
+          console.log(tokenAddress);      //marketplace=0x0feFB07BCef45D95d198D2C51050b0A4783C2A80, collection=0x4a65C6C4cBEE896D62ab09BD6B762A5054B6275B
+          console.log(tokenId);           //215
+          console.log(durationHours);     //720
+          console.log(initialWorth);      //0x2386f26fc10000
+          console.log(earningGoal);       //0x5b1aeec098a858
+    
+          lendingContract.methods.setLendSettings(
+                    tokenAddress, tokenId, durationHours, initialWorth , earningGoal)
+              .send({ from: web3Ctx.account })
+              .on('transactionHash', (hash) => {
+                  console.log("setLendSettings transactionHash : " + tokenId + ' ' + hash);
                 })
-                .on('error', (error) => {
-                  window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
-                  marketplaceCtx.setMktIsLoading(false);
-                });            
-
-         // });
+              .on('receipt', (receipt) => {      
+                console.log("setLendSettings returned lentCount = ");
+                console.log(receipt);
+              })
+              .on('error', (error) => {
+                window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
+                marketplaceCtx.setMktIsLoading(false);
+              })
+              // .then( function (retVal) {
+              //   console.log("retVal = "  + retVal);
+              // })
+              ;            
+    
+     });
   };
 
   const makeOfferHandler = (event, id, key) => {

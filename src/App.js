@@ -18,7 +18,7 @@ import {
 import NFTCollection from './imported_abis/NFTCollection';    
 import NFTMarketplace from './imported_abis/NFTMarketplace';
     
-    import NFTLENDINGABI from './imported_abis/NFTLending';
+    import NFTLENDINGABI from './imported_abis/ERC721Lending';
 
 
 const App = () => {
@@ -139,7 +139,7 @@ const App = () => {
       }
 
       const lendingContract = new web3.eth.Contract(
-        NFTLENDINGABI, 
+        NFTLENDINGABI.abi, 
         ERC721_LENDING_CONTACT_ADDRESS);
       console.log("lendingContract: "); console.log(lendingContract);
 

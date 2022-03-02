@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "hardhat/console.sol";
 
 interface Sablier  {
   function createSalary(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime) external returns(uint256) ;
@@ -41,7 +42,7 @@ contract ERC721Lending is Initializable {
   // V1 mapping
   mapping(address => mapping(uint256 => ERC721ForLend)) public lentERC721List;
 
-  struct ERC721TokenEntry {
+  struct ERC721TokenEntry { 
     address lenderAddress;
     address tokenAddress;
     uint256 tokenId;
@@ -82,27 +83,28 @@ contract ERC721Lending is Initializable {
   // one NFT several times lending is available, while prev lending is ended, 
   //      thus tokenId is needed.
   // tokenAddress is ERC721 NFT token
-  function setLendSettings(address tokenAddress, uint256 tokenId, uint256 durationHours, uint256 initialWorth, uint256 earningGoal) public {
-    require(initialWorth > 0, 'Lending: Initial token worth must be above 0');
-    require(earningGoal > 0, 'Lending: Earning goal must be above 0');
-    require(durationHours > 0, 'Lending: Lending duration must be above 0');
-    require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Lending: Cannot change settings, token already lent');
-    require(lentERC721List[tokenAddress][tokenId].lenderClaimedCollateral == false, 'Lending: Collateral already claimed');
+  function setLendSettings(address tokenAddress, uint256 tokenId, uint256 durationHours, uint256 initialWorth, uint256 earningGoal) public returns(uint256){
+    // require(initialWorth > 0, 'Lending: Initial token worth must be above 0');
+    // require(earningGoal > 0, 'Lending: Earning goal must be above 0');
+    // require(durationHours > 0, 'Lending: Lending duration must be above 0');
+    // require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Lending: Cannot change settings, token already lent');
+    // require(lentERC721List[tokenAddress][tokenId].lenderClaimedCollateral == false, 'Lending: Collateral already claimed');
 
 
+    // // assuming token transfer is approved
+    // address fromOwner = IERC721(tokenAddress).ownerOf(tokenId);//address fromOwner = msg.sender;
+    // address toAddress = address(this);    // this class contract address
+    //                         IERC721(tokenAddress).approve(fromOwner, tokenId);
+    // IERC721(tokenAddress).transferFrom(fromOwner, toAddress, tokenId);
 
-    // assuming token transfer is approved
-    address fromOwner = IERC721(tokenAddress).ownerOf(tokenId);//address fromOwner = msg.sender;
-    address toAddress = address(this);    // this class contract address
-    //IERC721(tokenAddress).approve(fromOwner, tokenId);
-    IERC721(tokenAddress).transferFrom(fromOwner, toAddress, tokenId);
-
-    lentCount ++;
-    // lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
-
+    // lentCount ++;
+    // // lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
     // lendersWithTokens.push(ERC721TokenEntry(fromOwner, tokenAddress, tokenId));
 
-    // emit ERC721ForLendUpdated(tokenAddress, tokenId);
+    emit ERC721ForLendUpdated(tokenAddress, tokenId);
+
+    return lentCount;
+    
   }
 
   // after a borrower call setLendSettings,a lender aprove that loan and start lending.
@@ -241,7 +243,7 @@ contract ERC721Lending is Initializable {
         }
       }
       //lendersWithTokens.length--;
-      delete lendersWithTokens[lendersWithTokens.length-1];
+      delete lendersWithTokens[totalCount-1];
       //<--- 
     } else {
       delete lendersWithTokens[0];

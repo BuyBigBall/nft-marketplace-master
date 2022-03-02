@@ -222,7 +222,7 @@ const CollectionProvider = props => {
 
       const metadata = await response.json();      
 
-      console.log( "update Collection : " );      console.log(metadata.properties);
+      // console.log( "update Collection : " );      console.log(metadata.properties);
 
       NFT = {
         id: parseInt(id),
