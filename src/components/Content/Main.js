@@ -3,7 +3,6 @@ import { useContext  } from 'react';
 import MintForm from './MintNFT/MintForm';
 import CratorForm from './MintNFT/CratorForm';
 import NFTCollection from './NFTCollection/NFTCollection';
-import LendingCollection from './NFTCollection/LendingCollection';
 import CollectionContext from '../../store/collection-context';
 import MarketplaceContext from '../../store/marketplace-context';
 import Spinner from '../Layout/Spinner';

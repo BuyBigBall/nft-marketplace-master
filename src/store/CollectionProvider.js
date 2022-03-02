@@ -116,13 +116,8 @@ const CollectionProvider = props => {
   };
   
   const loadContractHandler = (web3, NFTCollection, account) => {
-    //const contract = deployedNetwork ? new web3.eth.Contract(NFTCollection
-          //, deployedNetwork.address): '';
-
           const contract = new web3.eth.Contract(NFTCollection.abi
                       , ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS);
-                      // .connect(library.getSigner(account))
-                      // ;
           if(library) contract.connect(library.getSigner(account));  
     dispatchCollectionAction({type: 'CONTRACT', contract: contract}); 
     return contract;
@@ -130,7 +125,6 @@ const CollectionProvider = props => {
   const loadTotalSupplyHandler = async(contract) => {
     const totalSupply = await contract.methods.totalSupply().call();
 
-    //console.log("totalSupply: "); console.log(totalSupply);
     dispatchCollectionAction({type: 'LOADSUPPLY', totalSupply: totalSupply});
     return totalSupply;
   };

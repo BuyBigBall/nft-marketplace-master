@@ -116,12 +116,8 @@ const MarketplaceProvider = props => {
   const [MarketplaceState, dispatchMarketplaceAction] = useReducer(marketplaceReducer, defaultMarketplaceState);
   
   const loadContractHandler = (web3, NFTMarketplace, account) => {
-    // const contract = deployedNetwork ? new web3.eth.Contract(NFTMarketplace.abi, deployedNetwork.address): '';
-
     const contract = new web3.eth.Contract(NFTMarketplace.abi
               , ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS);
-              // .connect(library.getSigner(account))
-              // ;
     if(library) contract.connect(library.getSigner(account));
     dispatchMarketplaceAction({type: 'CONTRACT', contract: contract}); 
 
