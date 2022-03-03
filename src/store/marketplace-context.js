@@ -12,7 +12,8 @@ const MarketplaceContext = React.createContext({
   updateOffer: () => {},
   addOffer: () => {},
   loadUserFunds: () => {},
-  setMktIsLoading: () => {}
+  setMktIsLoading: () => {},
+  setCollateral:() =>{}
 });
 
 export default MarketplaceContext;

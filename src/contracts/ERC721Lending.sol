@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+import "./NFTMarketplace.sol";
+
 interface Sablier  {
   function createSalary(address recipient, uint256 deposit, address tokenAddress, uint256 startTime, uint256 stopTime) external returns(uint256) ;
   function cancelSalary(uint256 salaryId) external returns (bool) ;
@@ -55,7 +57,7 @@ contract ERC721Lending is Initializable {
   address public sablierContractAddress;
 
   // V2, token address -> token id -> owner (lender) address -> lending details
-  mapping(address => mapping(uint256 => mapping(address => ERC721ForLend))) public lendingPool;
+  // mapping(address => mapping(uint256 => mapping(address => ERC721ForLend))) public lendingPool;
 
   // Note: version helper for migrations
   uint256 migrateVersion;
@@ -81,7 +83,8 @@ contract ERC721Lending is Initializable {
 
   // one NFT several times lending is available, while prev lending is ended, 
   //      thus tokenId is needed.
-  // tokenAddress is ERC721 NFT token
+  //  this tokenId is index for offers of collection.
+  // tokenAddress is NFTMarketplace Contract address for NFT(ERC721)
   function setLendSettings(address tokenAddress, uint256 tokenId, uint256 durationHours, uint256 initialWorth, uint256 earningGoal) public returns(uint256){
     require(initialWorth > 0, 'Lending: Initial token worth must be above 0');
     require(earningGoal > 0, 'Lending: Earning goal must be above 0');
@@ -93,14 +96,18 @@ contract ERC721Lending is Initializable {
     // assuming token transfer is approved
     address fromOwner = tokenAddress;// IERC721(tokenAddress).ownerOf(tokenId);//address fromOwner = msg.sender;
     address toAddress = address(this);    // this class contract address
-    address collectionContractAddress = address(0x60919a2d0a81Cde72a52589160141129F7308A91);    // this class contract address
-    //IERC721(msg.sender).approve(tokenAddress, tokenId);
-    IERC721(collectionContractAddress).safeTransferFrom(
-                    address(0x60919a2d0a81Cde72a52589160141129F7308A91), 
-                    address(0x2Bb9454D0be9d010aa7E99dE517da9E66452b51b), 1, "");
+    
+    NFTMarketplace nftMarketPlace = NFTMarketplace(tokenAddress);
+    
+    nftMarketPlace.offerCollateral(tokenId, toAddress);
+
+    //address collectionContractAddress = address( nftMarketPlace.collectionAddress() );
+    // IERC721(collectionContractAddress).safeTransferFrom(
+    //                 tokenAddress, 
+    //                 toAddress, tokenId, "");
 
     lentCount ++;
-    // // lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
+    lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
     lendersWithTokens.push(ERC721TokenEntry(fromOwner, tokenAddress, tokenId));
 
     emit ERC721ForLendUpdated(tokenAddress, tokenId);
@@ -109,6 +116,15 @@ contract ERC721Lending is Initializable {
     
   }
 
+  function getLendingInformation(address tokenAddress, uint256 tokenId) public view returns (ERC721ForLend memory){
+    require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Lending: Cannot change settings, token already lent');
+    require(lentERC721List[tokenAddress][tokenId].lenderClaimedCollateral == false, 'Lending: Collateral already claimed');
+    
+    ERC721ForLend storage lendingInformation = lentERC721List[tokenAddress][tokenId];
+    
+    return lendingInformation;
+    
+  }
 //   // after a borrower call setLendSettings,a lender aprove that loan and start lending.
 //   // parameters are same to the above function
 //   function startBorrowing(address tokenAddress, uint256 tokenId) public {

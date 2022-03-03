@@ -132,10 +132,6 @@ const CollectionProvider = props => {
   const loadCollectionHandler = async(contract, totalSupply, account) => {
     let collection = [];
 
-    // console.log(props);    console.log(collectionContext);
-    
-    // console.log("contract.methods = ");    console.log(contract.methods);
-    let iCount = 0;
     //totalSupply = 1;
     for(let i = 0; i < totalSupply; i++) {
       /*
@@ -156,31 +152,17 @@ const CollectionProvider = props => {
       if(!hash) continue;
       try {
         const owner = await contract.methods.ownerOf(i + 1).call();   //this is current owner
-        if(i>=5 )
-        {
-          if(owner!=account)        
-          continue;
-        } 
-        
         
         var _url = `https://ipfs.infura.io/ipfs/${hash}?clear`;
-        // console.log(_url);
         const response = await fetch(_url);
         if(!response.ok) {
           console.log( "error: " + _url);
           throw new Error('Something went wrong in fetching.');
         }
 
-        // console.log(contract.methods.ownerOf(i + 1));
         const metadata = await response.json();
+        console.log(i + " owner := " + owner); console.log(metadata.properties.name.description + '' );
 
-        console.log(i + " owner := " + owner);
-        console.log(metadata.properties.name.description + '' );
-
-
-       // console.log("collection.length : ");        console.log(collection.length);
-        iCount++;
-        //console.log(metadata.properties);
         collection = [{
           id: i + 1,          //id: iCount,
           title: metadata.properties.name.description,

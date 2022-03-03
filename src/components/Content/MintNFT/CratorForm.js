@@ -137,7 +137,7 @@ const CratorForm = () => {
         </div>
         <div className="col-md-4">
           <input
-            type='input'
+            type='file'
             className={`mb-1`}
             value={enteredFilepath}
             placeholder='Select Your Crator File'

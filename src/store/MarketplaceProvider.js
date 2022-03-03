@@ -62,7 +62,19 @@ const marketplaceReducer = (state, action) => {
     };
   }
 
-  if(action.type === 'ADDOFFER') {    
+  if(action.type === 'COLLATERALFFER') {    
+    const offers = state.offers.filter(offer => offer.offerId !== parseInt(action.tokenId));
+
+    return {
+      contract: state.contract,
+      offerCount: state.offerCount,
+      offers: offers,
+      userFunds: state.userFunds,
+      mktIsLoading: state.mktIsLoading
+    };
+  }
+
+ if(action.type === 'ADDOFFER') {    
     const index = state.offers.findIndex(offer => offer.offerId === parseInt(action.offer.offerId));
     let offers = [];
 
@@ -73,11 +85,25 @@ const marketplaceReducer = (state, action) => {
         user: (action.offer.user),
         price: parseInt(action.offer.price),
         fulfilled: false,
-        cancelled: false
+        cancelled: false,
+        lentStatus: 0
       }];
     } else {
       offers = [...state.offers];
     }    
+
+    return {
+      contract: state.contract,
+      offerCount: state.offerCount,
+      offers: offers,
+      userFunds: state.userFunds,
+      mktIsLoading: state.mktIsLoading
+    };
+  }
+
+
+  if(action.type === 'COLLATERALOFFER') {    
+    const offers = state.offers.filter(offer => offer.offerId !== parseInt(action.offerId));
 
     return {
       contract: state.contract,
@@ -142,6 +168,7 @@ const MarketplaceProvider = props => {
       offer.offerId = parseInt(offer.offerId);
       offer.id = parseInt(offer.id);
       offer.price = parseInt(offer.price);
+      offer.lentStatus = parseInt(offer.lentStatus);
       return offer;
     })
     .filter(offer => offer.fulfilled === false && offer.cancelled === false); 
@@ -149,9 +176,12 @@ const MarketplaceProvider = props => {
   };
 
   const updateOfferHandler = (offerId) => {
-    // console.log("canceled offerId = " + offerId);
-    // alert(offerId);
     dispatchMarketplaceAction({type: 'UPDATEOFFER', offerId: offerId});   
+  };
+
+  const setCollateralHandler = (tokenId) =>
+  {
+    dispatchMarketplaceAction({type: 'COLLATERALFFER', tokenId: tokenId});   
   };
 
   const addOfferHandler = (offer) => {
@@ -180,7 +210,8 @@ const MarketplaceProvider = props => {
     updateOffer: updateOfferHandler,
     addOffer: addOfferHandler,
     loadUserFunds: loadUserFundsHandler,
-    setMktIsLoading: setMktIsLoadingHandler
+    setMktIsLoading: setMktIsLoadingHandler,
+    setCollateral: setCollateralHandler
   };
   
   const getLibrary = provider => {

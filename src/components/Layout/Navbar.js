@@ -25,6 +25,9 @@ const Navbar = () => {
     console.log(web3Ctx.account);
   };
 
+  const HomePageNavigate = ()  => {window.location.href= "/";}
+  const LandingPageNavigate=() => {window.location.href= "/lending";}
+
   const claimFundsHandler = () => {
     marketplaceCtx.contract.methods.claimFunds().send({ from: web3Ctx.account })
     .on('transactionHash', (hash) => {
@@ -61,7 +64,23 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-white p-0">      
       <ul className="navbar-nav ms-auto">
-        <li className="nav-item">
+        <li className="nav-item m-2">
+            <button 
+              type="button" 
+              className="btn btn-info btn-block navbar-btn text-white" 
+              onClick={HomePageNavigate}
+            >   Home
+            </button>
+        </li>
+        <li className="nav-item m-2">
+            <button 
+              type="button" 
+              className="btn btn-info btn-block navbar-btn text-white" 
+              onClick={LandingPageNavigate}
+            >   Lending
+            </button>
+        </li>
+        <li className="nav-item m-2">
           {marketplaceCtx.userFunds > 0 && !fundsLoading &&
             <button 
               type="button" 
@@ -77,7 +96,7 @@ const Navbar = () => {
               </div>
           </div>}          
         </li>
-        <li className="nav-item">
+        <li className="nav-item m-2">
           {web3Ctx.account && 
             <a 
               className="nav-link small" 
