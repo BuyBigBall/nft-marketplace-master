@@ -94,10 +94,10 @@ const Home = () => {
           console.log(error);
         });
 
-        // Event Offer Collateral 
-        mktContract.events.collateralOffered()
+        // Event Offer Loan 
+        mktContract.events.loanOffered()
         .on('data', (event) => {
-          marketplaceCtx.setCollateral(event.returnValues);
+          marketplaceCtx.setLoanNft(event.returnValues);
           marketplaceCtx.setMktIsLoading(false);
         })
         .on('error', (error) => {

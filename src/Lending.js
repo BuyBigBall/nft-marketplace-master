@@ -1,21 +1,23 @@
 import React, { useContext, useEffect } from 'react';
 
-import web3 from './connection/web3';
-import Navbar from './components/Layout/Navbar';
-import Main from './components/Content/Main';
-import Web3Context from './store/web3-context';
-import CollectionContext from './store/collection-context';
+import web3               from './connection/web3';
+import Navbar             from './components/Layout/Navbar';
+import Web3Context        from './store/web3-context';
+import CollectionContext  from './store/collection-context';
 import MarketplaceContext from './store/marketplace-context'
+import LendingContext     from './store/lending-context'
 
-import NFTCollection from './imported_abis/NFTCollection';    
-import NFTMarketplace from './imported_abis/NFTMarketplace';
+import NFTCollection      from './imported_abis/NFTCollection';    
+import NFTMarketplace     from './imported_abis/NFTMarketplace';
+import NFTLendingJson     from './imported_abis/ERC721Lending';
 
-import Lending from '../src/components/Content/NFTCollection/NFTLending';
+import Lending            from '../src/components/Content/NFTCollection/NFTLending';
 
 const NFTLending = () => {
   const web3Ctx = useContext(Web3Context);
   const collectionCtx = useContext(CollectionContext);
   const marketplaceCtx = useContext(MarketplaceContext);
+  const lendingCtx = useContext(LendingContext);
   
   useEffect(() => {
     // Check if the user has Metamask active
@@ -36,12 +38,13 @@ const NFTLending = () => {
       // Load account
       const account = await web3Ctx.loadAccount(web3);
 
-      // Load Network ID
+      // Load Network ID connected by metamask( for ex: Rinkeby Test Network )
       const networkId = await web3Ctx.loadNetworkId(web3);
 
       // Load Contracts      
       const nftContract = collectionCtx.loadContract(web3, NFTCollection, account);
       const mktContract = marketplaceCtx.loadContract(web3, NFTMarketplace, account);
+      const lendingContract  = lendingCtx.loadContract(web3, NFTLendingJson, account);
       
       if(nftContract) {        
         // Load total Supply
@@ -63,7 +66,6 @@ const NFTLending = () => {
       } else {
         window.alert('NFTCollection contract not deployed to detected network.')
       }
-
 
       if(mktContract) {
         // Load offer count
@@ -96,15 +98,15 @@ const NFTLending = () => {
           console.log(error);
         });
 
-        // Event Offer Collateral 
-        mktContract.events.collateralOffered()
-        .on('data', (event) => {
-          marketplaceCtx.setCollateral(event.returnValues);
-          marketplaceCtx.setMktIsLoading(false);
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+        // Event Offer Loan 
+        // mktContract.events.loanOffered()
+        // .on('data', (event) => {
+        //   marketplaceCtx.setLoanNft(event.returnValues);
+        //   marketplaceCtx.setMktIsLoading(false);
+        // })
+        // .on('error', (error) => {
+        //   console.log(error);
+        // });
         // Event offerCancelled subscription 
         mktContract.events.OfferCancelled()
         .on('data', (event) => {
@@ -120,6 +122,62 @@ const NFTLending = () => {
         window.alert('NFTMarketplace contract not deployed to detected network.')
       }
 
+
+      if(lendingContract) {
+        // Load lending loan count
+        const lendingCount = await lendingCtx.getLoanCount(lendingContract);
+        
+        // Load offers
+        lendingCtx.loadLoanCollection(lendingContract, lendingCount); 
+        
+        // // Load User Funds
+        // account && lendingCtx.loadUserFunds(lendingContract, account);
+
+        // Event OfferFilled subscription 
+        // lendingContract.events.OfferFilled()
+        //     .on('data', (event) => {
+        //       lendingCtx.updateOffer(event.returnValues.offerId);
+        //       collectionCtx.updateOwner(event.returnValues.id, event.returnValues.newOwner);
+        //       lendingCtx.setMktIsLoading(false);
+        //     })
+        //     .on('error', (error) => {
+        //       console.log(error);
+        // });
+
+        // // Event Offer subscription 
+        // lendingContract.events.Offered()
+        //     .on('data', (event) => {
+        //       lendingCtx.addOffer(event.returnValues);
+        //       lendingCtx.setNftIsLoading(false);
+        //     })
+        //     .on('error', (error) => {
+        //       console.log(error);
+        // });
+
+        // // Event Offer Loan 
+        // lendingContract.events.loanOffered()
+        //     .on('data', (event) => {
+        //       lendingCtx.setLoanNft(event.returnValues);
+        //       lendingCtx.setNftIsLoading(false);
+        //     })
+        //     .on('error', (error) => {
+        //       console.log(error);
+        // });
+        // // Event offerCancelled subscription 
+        // lendingContract.events.OfferCancelled()
+        //     .on('data', (event) => {
+        //       lendingCtx.updateOffer(event.returnValues.tokenId);
+        //       collectionCtx.updateOwner(event.returnValues.id, event.returnValues.owner);
+        //       lendingCtx.setNftIsLoading(false);
+        //     })
+        //     .on('error', (error) => {
+        //       console.log(error);
+        // });
+        
+      } else {
+        window.alert('NFTMarketplace contract not deployed to detected network.')
+      }
+      
       // const lendingContract = new web3.eth.Contract(
       //   NFTLENDINGABI.abi, 
       //   ERC721_LENDING_CONTACT_ADDRESS);
@@ -127,6 +185,7 @@ const NFTLending = () => {
       
       collectionCtx.setNftIsLoading(false);
       marketplaceCtx.setMktIsLoading(false);
+      lendingCtx.setNftIsLoading(false);
 
       // Metamask Event Subscription - Account changed
       window.ethereum.on('accountsChanged', (accounts) => {

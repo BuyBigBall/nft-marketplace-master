@@ -13,7 +13,7 @@ const MarketplaceContext = React.createContext({
   addOffer: () => {},
   loadUserFunds: () => {},
   setMktIsLoading: () => {},
-  setCollateral:() =>{}
+  setLoanNft:() =>{}
 });
 
 export default MarketplaceContext;

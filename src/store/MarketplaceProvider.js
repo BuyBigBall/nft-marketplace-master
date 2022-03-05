@@ -62,7 +62,7 @@ const marketplaceReducer = (state, action) => {
     };
   }
 
-  if(action.type === 'COLLATERALFFER') {    
+  if(action.type === 'OFFERLOANNFT') {    
     const offers = state.offers.filter(offer => offer.offerId !== parseInt(action.tokenId));
 
     return {
@@ -91,19 +91,6 @@ const marketplaceReducer = (state, action) => {
     } else {
       offers = [...state.offers];
     }    
-
-    return {
-      contract: state.contract,
-      offerCount: state.offerCount,
-      offers: offers,
-      userFunds: state.userFunds,
-      mktIsLoading: state.mktIsLoading
-    };
-  }
-
-
-  if(action.type === 'COLLATERALOFFER') {    
-    const offers = state.offers.filter(offer => offer.offerId !== parseInt(action.offerId));
 
     return {
       contract: state.contract,
@@ -179,9 +166,9 @@ const MarketplaceProvider = props => {
     dispatchMarketplaceAction({type: 'UPDATEOFFER', offerId: offerId});   
   };
 
-  const setCollateralHandler = (tokenId) =>
+  const setLoanNftHandler = (tokenId) =>
   {
-    dispatchMarketplaceAction({type: 'COLLATERALFFER', tokenId: tokenId});   
+    dispatchMarketplaceAction({type: 'OFFERLOANNFT', tokenId: tokenId});   
   };
 
   const addOfferHandler = (offer) => {
@@ -211,7 +198,7 @@ const MarketplaceProvider = props => {
     addOffer: addOfferHandler,
     loadUserFunds: loadUserFundsHandler,
     setMktIsLoading: setMktIsLoadingHandler,
-    setCollateral: setCollateralHandler
+    setLoanNft: setLoanNftHandler
   };
   
   const getLibrary = provider => {

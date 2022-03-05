@@ -17,14 +17,14 @@ contract NFTMarketplace {
     uint price;
     bool fulfilled;
     bool cancelled;
-    uint lentStatus;      // 1-collateral, 2-lent, 0-returned(normal)
+    uint lentStatus;      // 1-offerLoan, 2-lent, 0-returned(normal)
   }
 
   event Offered( uint offerId,uint id,address user,uint price,bool fulfilled,bool cancelled );
   event OfferCancelled(uint offerId, uint id, address owner);
   event OfferFilled(uint offerId, uint id, address newOwner);
   event ClaimFunds(address user, uint amount);
-  event collateralOffered(uint tokenId, uint id, address owner);
+  event loanOffered(uint tokenId, uint id, address owner);
 
   mapping (uint => _Offer)  public offers;
   mapping (address => uint) public userFunds;
@@ -72,7 +72,7 @@ contract NFTMarketplace {
   }
 
   
-  function offerCollateral(uint _offerId, address lentContractAddress) external {
+  function offerLoaningNft(uint _offerId, address lentContractAddress) external {
     _Offer storage _offer = offers[_offerId];
     require(_offer.offerId == _offerId, 'The offer must exist');
     //require(_offer.user == msg.sender, 'The offer can only be canceled by the owner');
@@ -80,9 +80,22 @@ contract NFTMarketplace {
     require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
     nftCollection.transferFrom(address(this), lentContractAddress, _offer.id);       // this class contract address
     _offer.lentStatus = 1;
-    emit collateralOffered(_offerId, _offer.id, msg.sender);
+    emit loanOffered(_offerId, _offer.id, msg.sender);
   }
   
+  function cancelOfferLoaning(uint _offerId, address lentContractAddress) external {
+    _Offer storage _offer = offers[_offerId];
+    require(_offer.offerId == _offerId, 'The offer must exist');
+    //require(_offer.user == msg.sender, 'The offer can only be canceled by the owner');
+    require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
+    require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
+    // nftCollection.transferFrom(lentContractAddress, address(this), _offer.id);       // this class contract address
+    require(lentContractAddress!=address(0), 'ignore my test');
+    
+    _offer.lentStatus = 0;
+    emit loanOffered(_offerId, _offer.id, msg.sender);
+  }
+
   function claimFunds() public {
     require(userFunds[msg.sender] > 0, 'This user has no funds to be claimed');
     payable(msg.sender).transfer(userFunds[msg.sender]);

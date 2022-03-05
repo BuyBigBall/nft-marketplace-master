@@ -244,12 +244,6 @@ const CollectionProvider = props => {
     setNftIsLoading: setNftIsLoadingHandler
   };
   
-  
-  // const getLibrary = provider => {
-  //     const library = new Web3Provider(provider);
-  //     library.pollingInterval = 12000;
-  //     return library;
-  // }
   return (
     <CollectionContext.Provider 
           value={collectionContext}>

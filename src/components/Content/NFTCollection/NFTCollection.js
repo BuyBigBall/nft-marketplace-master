@@ -3,7 +3,8 @@ import { useContext, useRef, createRef } from 'react';
 import {
   ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS  ,
   ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS ,
-  ERC721_LENDING_CONTACT_ADDRESS
+  ERC721_LENDING_CONTACT_ADDRESS,
+  ERC720_ACCEPTED_PAY_TOKEN_ADDRESS
     } from '../../../config';
 import web3 from '../../../connection/web3';
 import Web3Context from '../../../store/web3-context';
@@ -30,35 +31,31 @@ const NFTCollection = () => {
           (_, i) => priceRefs.current[i] || createRef());
   }
   
-  const CollateralOfferHandler = (event, tokenIdx, key) => {
+  const LoanOfferHandler = (event, tokenIdx, price) => {
     event.preventDefault();
     
     const tokenId = marketplaceCtx.offers[tokenIdx].offerId;
-    console.log("Collateral tokenId = " + tokenId);
+    console.log("LoaningNFT tokenId = " + tokenId);
     
     const collectionContractAddress = collectionCtx.contract.options.address;  //nft contract address
     const tokenAddress = marketplaceCtx.contract.options.address;  //nft contract address
-    const nftPrice = priceRefs.current[key].current.attributes.price-0;
+    const nftPrice = price;//priceRefs.current[key].current.attributes.price-0;
     //console.log(tokenAddress); return;
 
     lendingContract.events.ERC721ForLendUpdated()
           .on('data', (event) => {
-            console.log("ERC721ForLendUpdated : ");
+            console.log("ERC721ForLendUpdated on data: ");
             console.log(event.returnValues.tokenAddress);
           })
           .on('error', (error) => {
-            console.log("ERC721ForLendUpdated : ");
+            console.log("ERC721ForLendUpdated error: ");
             console.log(error);
           });
 
-    if(priceRefs.current[key].current.value>=nftPrice)
-    {
-      alert('collateral offer requesting amount cannot be over than ' + nftPrice + ', it is nft price');return;
-    }
-    lendingContract.methods.initialize(web3Ctx.account).call()
+    lendingContract.methods.initialize(ERC720_ACCEPTED_PAY_TOKEN_ADDRESS).call()
         .then( function(retval) {
           const durationHours = 30 * 24;                        //30 days
-          const initialWorthNum = priceRefs.current[key].current.value;
+          const initialWorthNum = nftPrice;
           const initialWorth = parseEther(initialWorthNum);
                   
           const APR = 30;                                       // annual prefit ratio = 30%
@@ -66,23 +63,23 @@ const NFTCollection = () => {
           var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
           var lst = earningGoalNum.toString().split('.');
           earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
-          const earningGoal = parseEther( earningGoalNum );       // BigNumber for Ethereum
-          
+          const earningGoal = parseEther( (earningGoalNum - initialWorthNum).toString() );       // BigNumber for Ethereum
+
           console.log(tokenAddress + ' , ' + tokenId + ' : ' + durationHours + ' ' + initialWorth + ' ' + earningGoal);     
           //720 , //0x2386f26fc10000  , //0x5b1aeec098a858
     
-          lendingContract.methods.setLendSettings(
+          lendingContract.methods.offerLoaningNft(
                     tokenAddress, tokenId, durationHours, initialWorth , earningGoal)
               .send({ from: web3Ctx.account })
               .on('transactionHash', (hash) => {
-                  console.log("setLendSettings transactionHash : " + tokenId + ' ' + hash);
+                  console.log("offerLoaningNft transactionHash : " + tokenId + ' ' + hash);
                 })
               .on('receipt', (receipt) => {      
-                console.log("setLendSettings returned lentCount = ");
+                console.log("offerLoaningNft returned lentCount = ");
                 console.log(receipt);
               })
               .on('error', (error) => {
-                window.alert('Something went wrong when pushing a Offer for Collateral to the blockchain');
+                window.alert('Something went wrong when pushing a Offer for Loaning NFT to the blockchain');
                 marketplaceCtx.setMktIsLoading(false);
               });
       });
@@ -153,15 +150,19 @@ const NFTCollection = () => {
         const owner = index === -1 ? NFT.owner : marketplaceCtx.offers[index].user;
         const price = index !== -1 ? formatPrice(marketplaceCtx.offers[index].price).toFixed(2) : null;
         const lentStatus = index !== -1 ? marketplaceCtx.offers[index].lentStatus : null;
+        
         //console.log(lentStatus);
-        if(lentStatus!==null) return false;
+
+        if(lentStatus!==null && lentStatus!==0) return false;
+        
         return(
           <div key={key} className="col-md-3 m-3 pb-3 card border-info">
             <div className={"card-body"}>       
               <h5 className="card-title">{NFT.title}</h5>
             </div>
             <img src={`https://ipfs.infura.io/ipfs/${NFT.img}`} className="card-img-bottom" alt={`NFT ${key}`} />
-            <p className="fw-light fs-6">{`${owner.substr(0,7)}...${owner.substr(owner.length - 7)}`}</p>
+            
+            <p className="fw-light fs-6">creator: {`${owner.substr(0,7)}...${owner.substr(owner.length - 7)}`}</p>
             {index !== -1 ?  // this is offered NFT for sale by other man.
 
 
@@ -189,11 +190,11 @@ const NFTCollection = () => {
                       <p className="text-start"><b>{`${price}`}</b></p>
                     </div>
                   </div> 
-                  <form className="row g-2" onSubmit={(e) => CollateralOfferHandler(e, index, key)}>                
-                    <div className="col-5 d-grid gap-2">
-                      <button type="submit" className="btn btn-info">Collateral</button>
+                  <form className="row g-2" onSubmit={(e) => LoanOfferHandler(e, index, price)}>                
+                    <div className="col-12 d-grid gap-2">
+                      <button type="submit" className="btn btn-info">Offer Loan</button>
                     </div>
-                    <div className="col-7">
+                    {/* <div className="col-7">
                       <input
                         type="number"
                         step="0.01"
@@ -202,7 +203,7 @@ const NFTCollection = () => {
                         price={`${price}`}
                         ref={priceRefs.current[key]}
                       />
-                    </div>                                  
+                    </div>                                   */}
                   </form>
                 </div>
                 :  // this is non-offered NFT and normal owned for user.
