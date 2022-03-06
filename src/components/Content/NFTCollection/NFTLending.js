@@ -27,17 +27,27 @@ const NFTLending = () => {
     NFTLENDINGABI.abi, 
     ERC721_LENDING_CONTACT_ADDRESS);
 
-  const StartLending = (event, tokenIdx, key) => {
-      console.log("StartLending tokenIdx = "+tokenIdx);
+  const StartBorrowing = (event, tokenIdx, key) => {
       event.preventDefault();
+      const tokenId = marketplaceCtx.offers[tokenIdx].offerId;
+      const tokenAddress = marketplaceCtx.contract.options.address;  //nft contract address
+      
+      console.log("StartBorrowing tokenIdx = "+tokenIdx + ' ' + tokenId + ' ' + tokenAddress);
+
+      lendingContract.methods.startBorrowing(tokenAddress, tokenId)
+            .send({ from: web3Ctx.account })
+            .on('transactionHash', (hash) => {
+                console.log("cancelOfferLoaning called : " + hash)  
+                lendingCtx.cancelLoanOffer(lendingContract, tokenId, false);
+                });
   }
   
-  const CancelLoan = (event, tokenIdx, key) => {
+  const cancelLoanOffer = (event, tokenIdx, key) => {
     event.preventDefault();
       const tokenId = marketplaceCtx.offers[tokenIdx].offerId;
       const tokenAddress = marketplaceCtx.contract.options.address;  //nft contract address
 
-      console.log("CancelLoan tokenIdx = "+tokenIdx + ' ' + tokenId + ' ' + tokenAddress);
+      console.log("cancelLoanOffer tokenIdx = "+tokenIdx + ' ' + tokenId + ' ' + tokenAddress);
       
       lendingContract.methods.cancelOfferLoaning(tokenAddress, tokenId)
             .send({ from: web3Ctx.account })
@@ -112,9 +122,9 @@ const NFTLending = () => {
                               alt="price icon"></img>                <b> {`${price2}`}</b></div>
 
                   </div> 
-                  <form className="row g-2" onSubmit={(e) => StartLending(e, index, key)}>                
+                  <form className="row g-2" onSubmit={(e) => StartBorrowing(e, index, key)}>                
                     <div className="col-12 d-grid gap-2 text-center">
-                      <button type="submit" className="btn btn-primary">Approve Lending</button>
+                      <button type="submit" className="btn btn-primary">Start Borrowing</button>
                     </div>
                     {/* <div className="col-7">
                       <input
@@ -150,7 +160,7 @@ const NFTLending = () => {
                               alt="price icon"></img>                <b> {`${price2}`}</b></div>
 
                   </div> 
-                  <form className="row g-2" onSubmit={(e) => CancelLoan(e, index, key)}>                
+                  <form className="row g-2" onSubmit={(e) => cancelLoanOffer(e, index, key)}>                
                     <div className="col-3 d-grid gap-2"></div>
                     <div className="col-6 d-grid gap-2">
                       <button type="submit" className="btn btn-info">Cancel Loan</button>

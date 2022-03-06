@@ -4,7 +4,7 @@ import {
   ERC721_NFTCOLLECTION_CONTACT_TOKEN_ADDRESS  ,
   ERC721_NFTMARKETPLACE_CONTACT_TOKEN_ADDRESS ,
   ERC721_LENDING_CONTACT_ADDRESS,
-  ERC720_ACCEPTED_PAY_TOKEN_ADDRESS
+  ERC20_ACCEPTED_PAY_TOKEN_ADDRESS
     } from '../../../config';
 import web3 from '../../../connection/web3';
 import Web3Context from '../../../store/web3-context';
@@ -31,7 +31,7 @@ const NFTCollection = () => {
           (_, i) => priceRefs.current[i] || createRef());
   }
   
-  const LoanOfferHandler = (event, tokenIdx, price) => {
+  const  LoanOfferHandler = async (event, tokenIdx, price) => {
     event.preventDefault();
     
     const tokenId = marketplaceCtx.offers[tokenIdx].offerId;
@@ -51,38 +51,47 @@ const NFTCollection = () => {
             console.log("ERC721ForLendUpdated error: ");
             console.log(error);
           });
+    const payAddress = await lendingContract.methods.acceptedPayTokenAddress().call();
 
-    lendingContract.methods.initialize(ERC720_ACCEPTED_PAY_TOKEN_ADDRESS).call()
-        .then( function(retval) {
-          const durationHours = 30 * 24;                        //30 days
-          const initialWorthNum = nftPrice;
-          const initialWorth = parseEther(initialWorthNum);
-                  
-          const APR = 30;                                       // annual prefit ratio = 30%
-    
-          var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
-          var lst = earningGoalNum.toString().split('.');
-          earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
-          const earningGoal = parseEther( (earningGoalNum - initialWorthNum).toString() );       // BigNumber for Ethereum
+    console.log("payAddress = " + payAddress);
+    if(payAddress.substr(0,10)=="0x00000000")
+    {
+      lendingContract.methods.initialize(ERC20_ACCEPTED_PAY_TOKEN_ADDRESS)
+        .send({ from: web3Ctx.account })
+        .on('transactionHash', (hash) => {});
+    }
 
-          console.log(tokenAddress + ' , ' + tokenId + ' : ' + durationHours + ' ' + initialWorth + ' ' + earningGoal);     
-          //720 , //0x2386f26fc10000  , //0x5b1aeec098a858
-    
-          lendingContract.methods.offerLoaningNft(
-                    tokenAddress, tokenId, durationHours, initialWorth , earningGoal)
-              .send({ from: web3Ctx.account })
-              .on('transactionHash', (hash) => {
-                  console.log("offerLoaningNft transactionHash : " + tokenId + ' ' + hash);
-                })
-              .on('receipt', (receipt) => {      
-                console.log("offerLoaningNft returned lentCount = ");
-                console.log(receipt);
-              })
-              .on('error', (error) => {
-                window.alert('Something went wrong when pushing a Offer for Loaning NFT to the blockchain');
-                marketplaceCtx.setMktIsLoading(false);
-              });
-      });
+    //call lent start
+    {
+      const durationHours = 30 * 24;                        //30 days
+      const initialWorthNum = nftPrice;
+      const initialWorth = parseEther(initialWorthNum);
+              
+      const APR = 30;                                       // annual prefit ratio = 30%
+
+      var earningGoalNum = (initialWorthNum) * (100 + APR) / 100 / 365 * durationHours;
+      var lst = earningGoalNum.toString().split('.');
+      earningGoalNum = lst[0] + '.' + lst[1].substring(0,18);
+      const earningGoal = parseEther( (earningGoalNum - initialWorthNum).toString() );       // BigNumber for Ethereum
+
+      console.log(tokenAddress + ' , ' + tokenId + ' : ' + durationHours + ' ' + initialWorth + ' ' + earningGoal);     
+      //720 , //0x2386f26fc10000  , //0x5b1aeec098a858
+
+      lendingContract.methods.offerLoaningNft(
+                tokenAddress, tokenId, durationHours, initialWorth , earningGoal)
+          .send({ from: web3Ctx.account })
+          .on('transactionHash', (hash) => {
+              console.log("offerLoaningNft transactionHash : " + tokenId + ' ' + hash);
+            })
+          .on('receipt', (receipt) => {      
+            console.log("offerLoaningNft returned lentCount = ");
+            console.log(receipt);
+          })
+          .on('error', (error) => {
+            window.alert('Something went wrong when pushing a Offer for Loaning NFT to the blockchain');
+            marketplaceCtx.setMktIsLoading(false);
+          });
+    }
   };
 
   const makeOfferHandler = (event, id, key) => {
