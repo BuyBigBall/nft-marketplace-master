@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -26,6 +27,9 @@ interface Sablier  {
 
 contract ERC721Lending is Initializable {
   uint public lentCount = 0;
+
+  IERC20 public token;
+
   address public acceptedPayTokenAddress;
   
   address public addressTest;
@@ -104,8 +108,14 @@ contract ERC721Lending is Initializable {
     nftMarketPlace.offerLoaningNft(tokenId, toAddress);
 
     lentCount ++;
-    lendersWithTokens.push(ERC721TokenEntry(msg.sender, tokenAddress, tokenId));
-    lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth, earningGoal, 0, msg.sender, address(0), false, 0, 0);
+    if(lendersWithTokens.length<=lentCount)
+      lendersWithTokens.push(ERC721TokenEntry(msg.sender, tokenAddress, tokenId));
+    else
+      lendersWithTokens[lentCount-1] = ERC721TokenEntry(msg.sender, tokenAddress, tokenId);
+
+
+    // because parseEther's decimal is 18 , it must be divided / 1000000000;
+    lentERC721List[tokenAddress][tokenId] = ERC721ForLend(durationHours, initialWorth/1000000000, earningGoal/1000000000, 0, msg.sender, address(0), false, 0, 0);
         emit ERC721ForLendUpdated(tokenAddress, tokenId);
 
     return lentCount;
@@ -125,14 +135,10 @@ contract ERC721Lending is Initializable {
         lendersWithTokens[i] = lendersWithTokens[totalCount-1]; // insert last from array
       }
     }
-    delete lendersWithTokens[totalCount-1];
+    delete lendersWithTokens[totalCount-1];//lendersWithTokens.length--;
       //<--- 
   }
 
-
-  function viewOwnerAddress(address tokenAddress, uint256 tokenId) public view returns(address) {
-    return IERC721(tokenAddress).ownerOf(tokenId);
-  }
 
   function cancelOfferLoaning(address tokenAddress, uint256 tokenId) public {
     addressTest = msg.sender;
@@ -211,31 +217,35 @@ contract ERC721Lending is Initializable {
     }
   }
 
+
+  function tokenApprove(address tokenAddress, uint256 tokenId) public returns (bool)
+  {
+      uint256 _requiredSum = calculateLendSum(tokenAddress, tokenId);
+      IERC20 _payToken = IERC20(acceptedPayTokenAddress);
+      bool ret = _payToken.approve(msg.sender, _requiredSum);  
+      require(ret, 'the approving is faield');
+      return ret;
+  }  
   // after a borrower call setLendSettings,a lender aprove that loan and start lending.
   // parameters are same to the above function
-  function startBorrowing(address tokenAddress, uint256 tokenId) public {
+  function startBorrowing(address tokenAddress, uint256 tokenId) public payable{
     require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'Borrowing: Already lent');
     require(lentERC721List[tokenAddress][tokenId].earningGoal > 0, 'Borrowing: Lender did not set earning goal yet');
     require(lentERC721List[tokenAddress][tokenId].initialWorth > 0, 'Borrowing: Lender did not set initial worth yet');
 
-    IERC20 _payToken = IERC20(acceptedPayTokenAddress);
     uint256 _requiredSum = calculateLendSum(tokenAddress, tokenId);
-    uint256 _allowedLoan = _payToken.allowance(msg.sender, address(this));
-    require(_allowedLoan >= _requiredSum, 'Borrowing: Not enough collateral received');
+    IERC20 _payToken = IERC20(acceptedPayTokenAddress);
+    
+    // tokenApprove(_requiredSum); // this must be  async called
 
-    IERC20(acceptedPayTokenAddress).transferFrom(msg.sender, address(this), _requiredSum);
+    uint256 _allowedLoan = _payToken.allowance(address(this), msg.sender);
 
-    // check if needs approval as some tokens fail due this
-    // (bool success,) = tokenAddress.call(abi.encodeWithSignature(
-    //     "approve(address,uint256)",
-    //     address(this),            // this class contract address
-    //     tokenId
-    //   ));
-    // if (success) 
+    require(_allowedLoan >= _requiredSum, 'Borrowing: Not enough collateral received' );
 
-    {
-      IERC721(tokenAddress).approve(address(this), tokenId);
-    }
+
+    //IERC20(acceptedPayTokenAddress).transferFrom(msg.sender, address(this), _requiredSum);
+    IERC20(acceptedPayTokenAddress).transfer(address(this), _requiredSum);
+    
     IERC721(tokenAddress).transferFrom(address(this), msg.sender, tokenId);
 
     lentERC721List[tokenAddress][tokenId].borrower = msg.sender;
@@ -391,4 +401,84 @@ contract ERC721Lending is Initializable {
   }
   // */
 
+  /*
+  function uintToString(uint v)  returns (string str) {
+        uint maxlength = 100;
+        bytes memory reversed = new bytes(maxlength);
+        uint i = 0;
+        while (v != 0) {
+            uint remainder = v % 10;
+            v = v / 10;
+            reversed[i++] = byte(uint(48) + remainder);
+        }
+        bytes memory s = new bytes(i);
+        for (uint j = 0; j < i; j++) {
+            s[j] = reversed[i - 1 - j];
+        }
+        str = string(s);
+    }
+
+    function appendUintToString(string inStr, uint v)  returns (string str) {
+        uint maxlength = 100;
+        bytes memory reversed = new bytes(maxlength);
+        uint i = 0;
+        while (v != 0) {
+            uint remainder = v % 10;
+            v = v / 10;
+            reversed[i++] = byte(48 + remainder);
+        }
+        bytes memory inStrb = bytes(inStr);
+        bytes memory s = new bytes(inStrb.length + i);
+        uint j;
+        for (j = 0; j < inStrb.length; j++) {
+            s[j] = inStrb[j];
+        }
+        for (j = 0; j < i; j++) {
+            s[j + inStrb.length] = reversed[i - 1 - j];
+        }
+        str = string(s);
+    }
+    // */
+  
+  function viewDebugTotalSupply() public view returns (uint256)
+  {
+      return IERC20(acceptedPayTokenAddress).totalSupply();
+  }
+  
+  function viewDebugBalanceOf(address account) public view returns (uint256)
+  {
+      return IERC20(acceptedPayTokenAddress).balanceOf(account);
+  }
+
+  function viewDebugAllowance(address tokenAddress) public view returns (uint256)
+  {
+      address spender = tokenAddress;
+      IERC20 _payToken = IERC20(acceptedPayTokenAddress);
+      uint256 _allowedLoan = _payToken.allowance(address(this), spender);
+      return _allowedLoan;
+  }  
+
+
+  function viewDebugTransferFrom(address sender, address recipient, uint256 amount) public payable returns (bool)
+  {
+      IERC20 _payToken = IERC20(acceptedPayTokenAddress);
+      bool ret = _payToken.transferFrom(sender, recipient, amount);
+      require(ret, 'the transferFrom is faield');
+      return ret;
+  }  
+
+  function viewDebugTransfer(uint256 amount) public payable returns (bool)
+  {
+      bool ret = IERC20(acceptedPayTokenAddress).transfer(address(this), amount);
+      require(ret, 'the transfer is faield');
+      return ret;
+     
+  } 
+  function viewOwnerAddress(address tokenAddress, uint256 tokenId) public view returns(address) {
+    return IERC721(tokenAddress).ownerOf(tokenId);
+  }
+
+  function viewMsgSender() public view virtual returns (address) {
+        return msg.sender;
+    }
 }

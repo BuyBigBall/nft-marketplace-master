@@ -34,12 +34,16 @@ const NFTLending = () => {
       
       console.log("StartBorrowing tokenIdx = "+tokenIdx + ' ' + tokenId + ' ' + tokenAddress);
 
-      lendingContract.methods.startBorrowing(tokenAddress, tokenId)
-            .send({ from: web3Ctx.account })
-            .on('transactionHash', (hash) => {
-                console.log("cancelOfferLoaning called : " + hash)  
-                lendingCtx.cancelLoanOffer(lendingContract, tokenId, false);
-                });
+      lendingContract.methods.tokenApprove( tokenAddress, tokenId )
+          .send({ from: web3Ctx.account })
+          .on('transactionHash', (hash) => {
+                lendingContract.methods.startBorrowing(tokenAddress, tokenId)
+                      .send({ from: web3Ctx.account })
+                      .on('transactionHash', (hash) => {
+                          console.log("cancelOfferLoaning called : " + hash)  
+                          lendingCtx.cancelLoanOffer(lendingContract, tokenId, false);
+                          });
+        });
   }
   
   const cancelLoanOffer = (event, tokenIdx, key) => {
@@ -86,8 +90,8 @@ const NFTLending = () => {
         if(lendInformation.length>0)
         {
           lendInformation = lendInformation[0];
-          price1 = lendInformation.initialWorth / 1000000000000000000.0;
-          price2 = (lendInformation.earningGoal  / 1000000000000000000.0).toString().substr(0,15);
+          price1 = lendInformation.initialWorth / 1000000000.0;
+          price2 = (lendInformation.earningGoal  / 1000000000.0).toString().substr(0,15);
         }
         // console.log( lendInformation.initialWorth ); return false;
         return(
