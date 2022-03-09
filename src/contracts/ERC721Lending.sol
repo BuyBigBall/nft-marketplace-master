@@ -28,7 +28,7 @@ interface Sablier  {
 contract ERC721Lending is Initializable {
   uint public lentCount = 0;
 
-  IERC20 public token;
+  IERC20 public erc20ContractToken;
 
   address public acceptedPayTokenAddress;
   
@@ -75,6 +75,7 @@ contract ERC721Lending is Initializable {
 
   function initialize(address tokenAddress) public initializer {
     acceptedPayTokenAddress = tokenAddress;
+    erc20ContractToken = IERC20(acceptedPayTokenAddress);
   }
 
   function setSablierContractAddress(address contractAddress) public {
@@ -143,10 +144,9 @@ contract ERC721Lending is Initializable {
   function cancelOfferLoaning(address tokenAddress, uint256 tokenId) public {
     addressTest = msg.sender;
     require(lentERC721List[tokenAddress][tokenId].borrower == address(0), 'OfferLoaning: Cannot cancel if lent');
-    require(lentERC721List[tokenAddress][tokenId].lender == msg.sender, 'OfferLoaning: Cannot cancel no-owned lend');
+    require(lentERC721List[tokenAddress][tokenId].lender == msg.sender, 'OfferLoaning: Cannot cancel because metamask account is not a original owner for loaning');
     require(lentERC721List[tokenAddress][tokenId].lenderClaimedNFT == false, 'OfferLoaning: Loan claimed');
     NFTMarketplace nftMarketPlace = NFTMarketplace(tokenAddress);
-    address nftAddress = address(nftMarketPlace.collectionAddress());
     
     
     // check if needs approval as some tokens fail due this
@@ -157,8 +157,12 @@ contract ERC721Lending is Initializable {
     //   ));
     // if (success) 
 
-    // IERC721(nftAddress).approve(address(this), tokenId);   // ERC721: approval to current owner
-
+    address nftAddress = address(nftMarketPlace.collectionAddress());
+    
+    if( IERC721(nftAddress).ownerOf(tokenId)!=address(this) )
+    {
+      IERC721(nftAddress).approve(tokenAddress, tokenId);   // ERC721: approval to current owner
+    }
     IERC721(nftAddress).transferFrom(address(this), tokenAddress, tokenId);
 
     lentERC721List[tokenAddress][tokenId] = ERC721ForLend(0, 0, 0, 0, address(0), address(0), false, 0, 0); // reset details
@@ -217,15 +221,25 @@ contract ERC721Lending is Initializable {
     }
   }
 
-
+  // this is no needed and this is having error because msg.sender is this address.
   function tokenApprove(address tokenAddress, uint256 tokenId) public returns (bool)
   {
       uint256 _requiredSum = calculateLendSum(tokenAddress, tokenId);
       IERC20 _payToken = IERC20(acceptedPayTokenAddress);
-      bool ret = _payToken.approve(msg.sender, _requiredSum);  
-      require(ret, 'the approving is faield');
-      return ret;
+   
+      // // check if needs approval as some tokens fail due this
+      // (bool success,) = acceptedPayTokenAddress.call(abi.encodeWithSignature(
+      //     "approve(address,uint256)",
+      //     address(this),        // // approval to current owner
+      //     _requiredSum
+      //   ));
+      // if (!success) 
+      bool  success = _payToken.approve(address(this), _requiredSum);  
+      require(success, 'the approving is faield');
+      return success;
   }  
+
+
   // after a borrower call setLendSettings,a lender aprove that loan and start lending.
   // parameters are same to the above function
   function startBorrowing(address tokenAddress, uint256 tokenId) public payable{
@@ -234,19 +248,21 @@ contract ERC721Lending is Initializable {
     require(lentERC721List[tokenAddress][tokenId].initialWorth > 0, 'Borrowing: Lender did not set initial worth yet');
 
     uint256 _requiredSum = calculateLendSum(tokenAddress, tokenId);
-    IERC20 _payToken = IERC20(acceptedPayTokenAddress);
     
     // tokenApprove(_requiredSum); // this must be  async called
-
-    uint256 _allowedLoan = _payToken.allowance(address(this), msg.sender);
+    IERC20 _payToken = IERC20(acceptedPayTokenAddress);
+    uint256 _allowedLoan = _payToken.allowance(msg.sender, address(this));
 
     require(_allowedLoan >= _requiredSum, 'Borrowing: Not enough collateral received' );
 
-
-    //IERC20(acceptedPayTokenAddress).transferFrom(msg.sender, address(this), _requiredSum);
-    IERC20(acceptedPayTokenAddress).transfer(address(this), _requiredSum);
+    IERC20(acceptedPayTokenAddress).transferFrom(msg.sender, address(this), _requiredSum);
     
-    IERC721(tokenAddress).transferFrom(address(this), msg.sender, tokenId);
+    //IERC721(tokenAddress).transferFrom(address(this), msg.sender, tokenId);
+    NFTMarketplace nftMarketPlace = NFTMarketplace(tokenAddress);
+    address nftAddress = address(nftMarketPlace.collectionAddress());// IERC721(nftAddress).approve(address(this), tokenId); 
+    IERC721(nftAddress).approve(msg.sender, tokenId);
+    IERC721(nftAddress).transferFrom(address(this), msg.sender, tokenId);
+
 
     lentERC721List[tokenAddress][tokenId].borrower = msg.sender;
     lentERC721List[tokenAddress][tokenId].borrowedAtTimestamp = block.timestamp;
@@ -261,13 +277,17 @@ contract ERC721Lending is Initializable {
     address _borrower = lentERC721List[tokenAddress][tokenId].borrower;
     require(_borrower == msg.sender, 'Borrowing: Can be stopped only by active borrower');
 
+    NFTMarketplace nftMarketPlace = NFTMarketplace(tokenAddress);
+    address nftAddress = address(nftMarketPlace.collectionAddress());// IERC721(nftAddress).approve(address(this), tokenId); 
+
     if (lentERC721List[tokenAddress][tokenId].lenderClaimedNFT == false) {
       // assuming token transfer is approved
-      IERC721(tokenAddress).transferFrom(msg.sender, address(this), tokenId);
+      IERC721(nftAddress).transferFrom(msg.sender, address(this), tokenId);
 
       uint256 _initialWorth = lentERC721List[tokenAddress][tokenId].initialWorth;
 
       IERC20(acceptedPayTokenAddress).transfer(_borrower, _initialWorth);
+
 
       lentERC721List[tokenAddress][tokenId].borrower = address(0);
       lentERC721List[tokenAddress][tokenId].borrowedAtTimestamp = 0;
@@ -298,31 +318,31 @@ contract ERC721Lending is Initializable {
         lentERC721List[tokenAddress][tokenId].sablierSalaryId = 0;
 
         // check if lending entry has fees
-        uint256 _platformFeeToCollect = 0;
-        uint256 _feesPercent = lentERC721List[tokenAddress][tokenId].platformFeesPercent;
-        if (_feesPercent > 0) {
-          _platformFeeToCollect = SafeMath.mul(SafeMath.div(_streamSalaryAmount, 100), _feesPercent);
-        }
+        // uint256 _platformFeeToCollect = 0;
+        // uint256 _feesPercent = lentERC721List[tokenAddress][tokenId].platformFeesPercent;
+        // if (_feesPercent > 0) {
+        //   _platformFeeToCollect = SafeMath.mul(SafeMath.div(_streamSalaryAmount, 100), _feesPercent);
+        // }
 
-        if (_balanceNotStreamed > 0) {
-          // check if lending has fees
-          if (_platformFeeToCollect > 0) {
-            // lending did not go through full period, fees percent will be lower, lets refund to lender
-            uint256 _actualSalaryLenderReceives = SafeMath.sub(_streamSalaryAmount, uint256(_balanceNotStreamed));
-            uint256 _platformFeeToCollectUpdated = SafeMath.mul(SafeMath.div(_actualSalaryLenderReceives, 100), _feesPercent);
-            uint256 _platformFeeToRefund = SafeMath.sub(_platformFeeToCollect, _platformFeeToCollectUpdated);
-            _platformFeeToCollect =_platformFeeToCollectUpdated;
-            IERC20(acceptedPayTokenAddress).transfer(lenderAddress, uint256(_platformFeeToRefund));
-          }
+        // if (_balanceNotStreamed > 0) {
+        //   // check if lending has fees
+        //   if (_platformFeeToCollect > 0) {
+        //     // lending did not go through full period, fees percent will be lower, lets refund to lender
+        //     uint256 _actualSalaryLenderReceives = SafeMath.sub(_streamSalaryAmount, uint256(_balanceNotStreamed));
+        //     uint256 _platformFeeToCollectUpdated = SafeMath.mul(SafeMath.div(_actualSalaryLenderReceives, 100), _feesPercent);
+        //     uint256 _platformFeeToRefund = SafeMath.sub(_platformFeeToCollect, _platformFeeToCollectUpdated);
+        //     _platformFeeToCollect =_platformFeeToCollectUpdated;
+        //     IERC20(acceptedPayTokenAddress).transfer(lenderAddress, uint256(_platformFeeToRefund));
+        //   }
 
-          // return unstreamed balance to borrower
-          IERC20(acceptedPayTokenAddress).transfer(_borrower, uint256(_balanceNotStreamed));
-        }
+        //   // return unstreamed balance to borrower
+        //   IERC20(acceptedPayTokenAddress).transfer(_borrower, uint256(_balanceNotStreamed));
+        // }
 
-        // check if fees collecting address set and lending has fees
-        if (feesContractAddress != address(0) && _platformFeeToCollect > 0) {
-          IERC20(acceptedPayTokenAddress).transfer(feesContractAddress, _platformFeeToCollect);
-        }
+        // // check if fees collecting address set and lending has fees
+        // if (feesContractAddress != address(0) && _platformFeeToCollect > 0) {
+        //   IERC20(acceptedPayTokenAddress).transfer(feesContractAddress, _platformFeeToCollect);
+        // }
       } else {
         // legacy: send lender his interest
         uint256 _earningGoal = lentERC721List[tokenAddress][tokenId].earningGoal;
@@ -450,35 +470,25 @@ contract ERC721Lending is Initializable {
       return IERC20(acceptedPayTokenAddress).balanceOf(account);
   }
 
-  function viewDebugAllowance(address tokenAddress) public view returns (uint256)
+  function viewDebugAllowance() public view returns (uint256)
   {
-      address spender = tokenAddress;
+      address spender = msg.sender;
       IERC20 _payToken = IERC20(acceptedPayTokenAddress);
-      uint256 _allowedLoan = _payToken.allowance(address(this), spender);
+      uint256 _allowedLoan = _payToken.allowance(spender, address(this));
       return _allowedLoan;
   }  
 
-
-  function viewDebugTransferFrom(address sender, address recipient, uint256 amount) public payable returns (bool)
+  function viewTestAllowance(address owner, address spender) public view returns (uint256)
   {
       IERC20 _payToken = IERC20(acceptedPayTokenAddress);
-      bool ret = _payToken.transferFrom(sender, recipient, amount);
-      require(ret, 'the transferFrom is faield');
-      return ret;
+      uint256 _allowedLoan = _payToken.allowance(owner, spender);
+      return _allowedLoan;
   }  
 
-  function viewDebugTransfer(uint256 amount) public payable returns (bool)
-  {
-      bool ret = IERC20(acceptedPayTokenAddress).transfer(address(this), amount);
-      require(ret, 'the transfer is faield');
-      return ret;
-     
-  } 
   function viewOwnerAddress(address tokenAddress, uint256 tokenId) public view returns(address) {
-    return IERC721(tokenAddress).ownerOf(tokenId);
+    NFTMarketplace nftMarketPlace = NFTMarketplace(tokenAddress);
+    address nftAddress = address(nftMarketPlace.collectionAddress());
+    return IERC721(nftAddress).ownerOf(tokenId);
   }
 
-  function viewMsgSender() public view virtual returns (address) {
-        return msg.sender;
-    }
 }
