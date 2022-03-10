@@ -64,11 +64,25 @@ const marketplaceReducer = (state, action) => {
 
   if(action.type === 'OFFERLOANNFT') {    
     const offers = state.offers.filter(offer => offer.offerId !== parseInt(action.tokenId));
+    const offerLoanNft = state.offers.filter(offer => offer.offerId === parseInt(action.tokenId));
+  
+  
+    const newOffers = [...offers, {
+      offerId: parseInt(offerLoanNft.offerId),
+      id: parseInt(offerLoanNft.id),
+      user: (offerLoanNft.user),
+      price: parseInt(offerLoanNft.price),
+      fulfilled: false,
+      cancelled: false,
+      lentStatus: 1
+    }];
 
+    console.log('OFFERLOANNFT');
+    console.log(newOffers);
     return {
       contract: state.contract,
       offerCount: state.offerCount,
-      offers: offers,
+      offers: newOffers,
       userFunds: state.userFunds,
       mktIsLoading: state.mktIsLoading
     };

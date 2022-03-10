@@ -25,6 +25,9 @@ contract NFTMarketplace {
   event OfferFilled(uint offerId, uint id, address newOwner);
   event ClaimFunds(address user, uint amount);
   event loanOffered(uint tokenId, uint id, address owner);
+  event loanBorrowingStarted(uint tokenId, uint id, address owner);
+  event loanBorrowingStopped(uint tokenId, uint id, address owner);
+  event loanBorrowingClaimed(uint tokenId, uint id, address owner);
 
   mapping (uint => _Offer)  public offers;
   mapping (address => uint) public userFunds;
@@ -86,10 +89,8 @@ contract NFTMarketplace {
   function cancelOfferLoaning(uint _offerId, address lentContractAddress) external {
     _Offer storage _offer = offers[_offerId];
     require(_offer.offerId == _offerId, 'The offer must exist');
-    //require(_offer.user == msg.sender, 'The offer can only be canceled by the owner');
     require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
     require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
-    // nftCollection.transferFrom(lentContractAddress, address(this), _offer.id);       // this class contract address
     require(lentContractAddress!=address(0), 'ignore my test');
     
     _offer.lentStatus = 0;
@@ -103,6 +104,32 @@ contract NFTMarketplace {
     userFunds[msg.sender] = 0;    
   }
 
+  function StopBorrowing(uint tokenId) public {
+    _Offer storage _offer = offers[tokenId];
+    require(_offer.offerId == tokenId, 'The offer must exist');
+    require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
+    require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
+    _offer.lentStatus = 1;
+    emit loanBorrowingStopped(tokenId, _offer.id, msg.sender);
+  }
+
+  function StartBorrowing(uint tokenId) public {
+    _Offer storage _offer = offers[tokenId];
+    require(_offer.offerId == tokenId, 'The offer must exist');
+    require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
+    require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
+    _offer.lentStatus = 2;
+    emit loanBorrowingStarted(tokenId, _offer.id, msg.sender);
+  }
+
+  function claimLoaning(uint tokenId) public {
+    _Offer storage _offer = offers[tokenId];
+    require(_offer.offerId == tokenId, 'The offer must exist');
+    require(_offer.fulfilled == false, 'A fulfilled offer cannot be cancelled');
+    require(_offer.cancelled == false, 'An offer cannot be cancelled twice');
+    _offer.lentStatus = 0;
+    emit loanBorrowingClaimed(tokenId, _offer.id, msg.sender);
+  }
   // Fallback: reverts if Ether is sent to this smart-contract by mistake
   fallback () external {
     revert();

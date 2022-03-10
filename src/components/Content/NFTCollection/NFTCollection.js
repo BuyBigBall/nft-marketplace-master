@@ -81,7 +81,8 @@ const NFTCollection = () => {
                 tokenAddress, tokenId, durationHours, initialWorth , earningGoal)
           .send({ from: web3Ctx.account })
           .on('transactionHash', (hash) => {
-              console.log("offerLoaningNft transactionHash : " + tokenId + ' ' + hash);
+              //console.log("offerLoaningNft transactionHash : " + tokenId + ' ' + hash);
+              marketplaceCtx.setMktIsLoading(true);
             })
           .on('receipt', (receipt) => {      
             console.log("offerLoaningNft returned lentCount = ");

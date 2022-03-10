@@ -45,7 +45,8 @@ const NFTLending = () => {
       const nftContract = collectionCtx.loadContract(web3, NFTCollection, account);
       const mktContract = marketplaceCtx.loadContract(web3, NFTMarketplace, account);
       const lendingContract  = lendingCtx.loadContract(web3, NFTLendingJson, account);
-      
+      //const lendingContract = new web3.eth.Contract( NFTLENDINGABI.abi, ERC721_LENDING_CONTACT_ADDRESS);
+
       if(nftContract) {        
         // Load total Supply
         const totalSupply = await collectionCtx.loadTotalSupply(nftContract);
@@ -77,46 +78,69 @@ const NFTLending = () => {
         // Load User Funds
         account && marketplaceCtx.loadUserFunds(mktContract, account);
 
-        // Event OfferFilled subscription 
-        mktContract.events.OfferFilled()
-        .on('data', (event) => {
-          marketplaceCtx.updateOffer(event.returnValues.offerId);
-          collectionCtx.updateOwner(event.returnValues.id, event.returnValues.newOwner);
-          marketplaceCtx.setMktIsLoading(false);
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+        // Event Offer Loan 
+        mktContract.events.loanOffered()
+            .on('data', (event) => {
+              console.log("loanOffered : ");
+              console.log(event);
+              // marketplaceCtx.setLoanNft(event.returnValues);
+              // marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
 
-        // Event Offer subscription 
-        mktContract.events.Offered()
-        .on('data', (event) => {
-          marketplaceCtx.addOffer(event.returnValues);
-          marketplaceCtx.setMktIsLoading(false);
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+        mktContract.events.loanBorrowingStarted()
+            .on('data', (event) => {
+              console.log("loanBorrowingStarted : ");
+              console.log(event);
+              // marketplaceCtx.setLoanNft(event.returnValues);
+              // marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
+        mktContract.events.loanBorrowingStopped()
+            .on('data', (event) => {
+              console.log("loanBorrowingStopped : ");
+              console.log(event);
+              // marketplaceCtx.setLoanNft(event.returnValues);
+              // marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
+        mktContract.events.loanBorrowingClaimed()
+            .on('data', (event) => {
+              console.log("loanBorrowingClaimed : ");
+              console.log(event);
+              // marketplaceCtx.setLoanNft(event.returnValues);
+              // marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
 
         // Event Offer Loan 
         // mktContract.events.loanOffered()
-        // .on('data', (event) => {
-        //   marketplaceCtx.setLoanNft(event.returnValues);
-        //   marketplaceCtx.setMktIsLoading(false);
-        // })
-        // .on('error', (error) => {
-        //   console.log(error);
-        // });
+        //     .on('data', (event) => {
+        //       marketplaceCtx.setLoanNft(event.returnValues);
+        //       marketplaceCtx.setMktIsLoading(false);
+        //     })
+        //     .on('error', (error) => {
+        //       console.log(error);
+        //     });
+
         // Event offerCancelled subscription 
         mktContract.events.OfferCancelled()
-        .on('data', (event) => {
-          marketplaceCtx.updateOffer(event.returnValues.tokenId);
-          collectionCtx.updateOwner(event.returnValues.id, event.returnValues.owner);
-          marketplaceCtx.setMktIsLoading(false);
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+            .on('data', (event) => {
+              marketplaceCtx.updateOffer(event.returnValues.tokenId);
+              collectionCtx.updateOwner(event.returnValues.id, event.returnValues.owner);
+              marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
         
       } else {
         window.alert('NFTMarketplace contract not deployed to detected network.')
@@ -129,30 +153,6 @@ const NFTLending = () => {
         
         // Load offers
         lendingCtx.loadLoanCollection(lendingContract, lendingCount); 
-        
-        // // Load User Funds
-        // account && lendingCtx.loadUserFunds(lendingContract, account);
-
-        // Event OfferFilled subscription 
-        // lendingContract.events.OfferFilled()
-        //     .on('data', (event) => {
-        //       lendingCtx.updateOffer(event.returnValues.offerId);
-        //       collectionCtx.updateOwner(event.returnValues.id, event.returnValues.newOwner);
-        //       lendingCtx.setMktIsLoading(false);
-        //     })
-        //     .on('error', (error) => {
-        //       console.log(error);
-        // });
-
-        // // Event Offer subscription 
-        // lendingContract.events.Offered()
-        //     .on('data', (event) => {
-        //       lendingCtx.addOffer(event.returnValues);
-        //       lendingCtx.setNftIsLoading(false);
-        //     })
-        //     .on('error', (error) => {
-        //       console.log(error);
-        // });
 
         // // Event Offer Loan 
         // lendingContract.events.loanOffered()
@@ -177,11 +177,6 @@ const NFTLending = () => {
       } else {
         window.alert('NFTMarketplace contract not deployed to detected network.')
       }
-      
-      // const lendingContract = new web3.eth.Contract(
-      //   NFTLENDINGABI.abi, 
-      //   ERC721_LENDING_CONTACT_ADDRESS);
-
       
       collectionCtx.setNftIsLoading(false);
       marketplaceCtx.setMktIsLoading(false);

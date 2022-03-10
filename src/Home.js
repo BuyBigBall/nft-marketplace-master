@@ -96,13 +96,13 @@ const Home = () => {
 
         // Event Offer Loan 
         mktContract.events.loanOffered()
-        .on('data', (event) => {
-          marketplaceCtx.setLoanNft(event.returnValues);
-          marketplaceCtx.setMktIsLoading(false);
-        })
-        .on('error', (error) => {
-          console.log(error);
-        });
+            .on('data', (event) => {
+              marketplaceCtx.setLoanNft(event.returnValues);
+              marketplaceCtx.setMktIsLoading(false);
+            })
+            .on('error', (error) => {
+              console.log(error);
+            });
         // Event offerCancelled subscription 
         mktContract.events.OfferCancelled()
         .on('data', (event) => {

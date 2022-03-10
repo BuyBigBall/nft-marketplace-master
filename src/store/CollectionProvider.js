@@ -61,6 +61,17 @@ const collectionReducer = (state, action) => {
   }
 
   if(action.type === 'UPDATECOLLECTION') {    
+
+    if(action.NFT===undefined) 
+    {
+      return{
+        contract: state.contract,
+        totalSupply: state.totalSupply,
+        collection: state.collection,
+        nftIsLoading: state.nftIsLoading,
+        account: state.account
+      };
+    }
     const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.NFT.id));
     let collection = [];
 

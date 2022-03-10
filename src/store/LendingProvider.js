@@ -67,23 +67,23 @@ const collectionReducer = (state, action) => {
   //   };
   // }
 
-  if(action.type === 'UPDATECOLLECTION') {    
-    const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.NFT.id));
-    let collection = [];
+  // if(action.type === 'UPDATECOLLECTION') {    
+  //   const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.NFT.id));
+  //   let collection = [];
 
-    if(index === -1) {
-      collection = [action.NFT, ...state.collection];
-    } else {
-      collection = [...state.collection];
-    }    
+  //   if(index === -1) {
+  //     collection = [action.NFT, ...state.collection];
+  //   } else {
+  //     collection = [...state.collection];
+  //   }    
 
-    return {
-      contract: state.contract,
-      totalCount: state.totalCount,
-      collection: collection,
-      nftIsLoading: state.nftIsLoading
-    };
-  }
+  //   return {
+  //     contract: state.contract,
+  //     totalCount: state.totalCount,
+  //     collection: collection,
+  //     nftIsLoading: state.nftIsLoading
+  //   };
+  // }
 
   // if(action.type === 'UPDATEOWNER') {
   //   const index = state.collection.findIndex(NFT => NFT.id === parseInt(action.id));
